@@ -4,6 +4,7 @@ import yfinance as yf
 from pandas_datareader import data as pdr
 from datetime import datetime
 import joblib
+import lightgbm
 
 # Override yfinance with pandas_datareader
 yf.pdr_override()

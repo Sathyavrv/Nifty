@@ -1,4 +1,4 @@
-
+scikit-learn
 streamlit
 pandas
 yfinance
@@ -6,3 +6,4 @@ pandas_datareader
 joblib
 datetime
 lightgbm
+scipy

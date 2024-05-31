@@ -1,5 +1,6 @@
 scikit-learn
 streamlit
+sklearn
 pandas
 yfinance
 pandas_datareader

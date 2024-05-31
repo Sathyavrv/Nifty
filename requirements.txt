@@ -1,10 +1,8 @@
 
 streamlit
-sklearn
 pandas
 yfinance
 pandas_datareader
 joblib
 datetime
 lightgbm
-scipy

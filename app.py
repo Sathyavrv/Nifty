@@ -27,7 +27,7 @@ def calculate_fibonacci_levels(high, low):
 
 # Load your pre-trained model
 def load_model():
-    return joblib.load("lgb_model_fit.pkl")
+    return joblib.load("lgb_model.pkl")
 
 # UI Setup
 st.set_page_config(page_title="Stock Prediction", page_icon="📈", layout="centered")
@@ -162,7 +162,7 @@ else:
         'Diff_open_Fib_0.618_H2_L2': diff_open_fib_0_618_h2_l2,
         'Diff_open_Fib_1.5_H2_L2': diff_open_fib_1_5_h2_l2,
         'Diff_open_Fib_1.618_H2_L2': diff_open_fib_1_618_h2_l2,
-        'Volume_Difference': volume_1 - volume_2,
+        #'Volume_Difference': volume_1 - volume_2,
     }
 
     # Convert to DataFrame
@@ -177,11 +177,11 @@ else:
 
     # Predict using the model
     prediction = model.predict(input_data)
-    #prediction_proba = model.predict_proba(input_data)
+    prediction_proba = model.predict_proba(input_data)
 
     st.subheader("Model Prediction")
     st.write("Prediction:", prediction[0])
-    #st.write("Prediction Probability:", prediction_proba)
+    st.write("Prediction Probability:", prediction_proba)
 
     st.markdown("---")
     st.write("**Note:** Ensure that the retrieved data is correct and there are no missing values before proceeding with model prediction.")

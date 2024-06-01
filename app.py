@@ -27,7 +27,7 @@ def calculate_fibonacci_levels(high, low):
 
 # Load your pre-trained model
 def load_model():
-    return joblib.load("updated_lgb_model_fit.pkl")
+    return joblib.load("updated_lgb_model.pkl")
 
 # UI Setup
 st.set_page_config(page_title="Stock Prediction", page_icon="📈", layout="centered")
@@ -177,11 +177,11 @@ else:
 
     # Predict using the model
     prediction = model.predict(input_data)
-    #prediction_proba = model.predict_proba(input_data)
+    prediction_proba = model.predict_proba(input_data)
 
     st.subheader("Model Prediction")
     st.write("Prediction:", prediction[0])
-    #st.write("Prediction Probability:", prediction_proba)
+    st.write("Prediction Probability:", prediction_proba)
 
     st.markdown("---")
     st.write("**Note:** Ensure that the retrieved data is correct and there are no missing values before proceeding with model prediction.")

@@ -21,8 +21,8 @@ def calculate_fibonacci_levels(high, low):
     return {
         'Fib_0.5': high - (high - low) * 0.5,
         'Fib_0.618': high - (high - low) * 0.618,
-        'Fib_1.5': high +  (high - low) * 1.5,
-        'Fib_1.618': high +  (high - low) * 1.618
+        'Fib_1.5': high -  (high - low) * 1.5,
+        'Fib_1.618': high -  (high - low) * 1.618
     }
 
 # Load your pre-trained model

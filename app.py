@@ -162,7 +162,7 @@ else:
         'Diff_open_Fib_0.618_H2_L2': diff_open_fib_0_618_h2_l2,
         'Diff_open_Fib_1.5_H2_L2': diff_open_fib_1_5_h2_l2,
         'Diff_open_Fib_1.618_H2_L2': diff_open_fib_1_618_h2_l2,
-        #'Volume_Difference': volume_1 - volume_2,
+        'Volume_Difference': volume_1 - volume_2,
     }
 
     # Convert to DataFrame

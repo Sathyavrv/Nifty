@@ -27,7 +27,7 @@ def calculate_fibonacci_levels(high, low):
 
 # Load your pre-trained model
 def load_model():
-    return joblib.load("lgb_model.pkl")
+    return joblib.load("no_time_lgb_model.pkl")
 
 # UI Setup
 st.set_page_config(page_title="Stock Prediction", page_icon="📈", layout="centered")
@@ -74,48 +74,48 @@ else:
     fib_levels_22 = calculate_fibonacci_levels(high_2, low_2)
 
     # Calculate differences
-    diff_open_1 = abs(open_val - val_1)
-    diff_open_2 = abs(open_val - val_2)
-    diff_open_3 = abs(open_val - val_3)
-    diff_open_4 = abs(open_val - val_4)
+    diff_open_1 = open_val - val_1
+    diff_open_2 = (open_val - val_2)
+    diff_open_3 = (open_val - val_3)
+    diff_open_4 = (open_val - val_4)
 
-    diff_open_high_1 = abs(open_val - high_1)
-    diff_open_low_1 = abs(open_val - low_1)
-    diff_open_high_2 = abs(open_val - high_2)
-    diff_open_low_2 = abs(open_val - low_2)
+    diff_open_high_1 = (open_val - high_1)
+    diff_open_low_1 = (open_val - low_1)
+    diff_open_high_2 = (open_val - high_2)
+    diff_open_low_2 = (open_val - low_2)
 
-    diff_open_fib_0_5_h1_l1 = abs(open_val - fib_levels_11['Fib_0.5'])
-    diff_open_fib_0_618_h1_l1 = abs(open_val - fib_levels_11['Fib_0.618'])
-    diff_open_fib_1_5_h1_l1 = abs(open_val - fib_levels_11['Fib_1.5'])
-    diff_open_fib_1_618_h1_l1 = abs(open_val - fib_levels_11['Fib_1.618'])
+    diff_open_fib_0_5_h1_l1 = (open_val - fib_levels_11['Fib_0.5'])
+    diff_open_fib_0_618_h1_l1 = (open_val - fib_levels_11['Fib_0.618'])
+    diff_open_fib_1_5_h1_l1 = (open_val - fib_levels_11['Fib_1.5'])
+    diff_open_fib_1_618_h1_l1 = (open_val - fib_levels_11['Fib_1.618'])
 
-    diff_open_fib_0_5_h1_l2 = abs(open_val - fib_levels_12['Fib_0.5'])
-    diff_open_fib_0_618_h1_l2 = abs(open_val - fib_levels_12['Fib_0.618'])
-    diff_open_fib_1_5_h1_l2 = abs(open_val - fib_levels_12['Fib_1.5'])
-    diff_open_fib_1_618_h1_l2 = abs(open_val - fib_levels_12['Fib_1.618'])
+    diff_open_fib_0_5_h1_l2 = (open_val - fib_levels_12['Fib_0.5'])
+    diff_open_fib_0_618_h1_l2 = (open_val - fib_levels_12['Fib_0.618'])
+    diff_open_fib_1_5_h1_l2 = (open_val - fib_levels_12['Fib_1.5'])
+    diff_open_fib_1_618_h1_l2 = (open_val - fib_levels_12['Fib_1.618'])
 
-    diff_open_fib_0_5_h2_l1 = abs(open_val - fib_levels_21['Fib_0.5'])
-    diff_open_fib_0_618_h2_l1 = abs(open_val - fib_levels_21['Fib_0.618'])
-    diff_open_fib_1_5_h2_l1 = abs(open_val - fib_levels_21['Fib_1.5'])
-    diff_open_fib_1_618_h2_l1 = abs(open_val - fib_levels_21['Fib_1.618'])
+    diff_open_fib_0_5_h2_l1 = (open_val - fib_levels_21['Fib_0.5'])
+    diff_open_fib_0_618_h2_l1 = (open_val - fib_levels_21['Fib_0.618'])
+    diff_open_fib_1_5_h2_l1 = (open_val - fib_levels_21['Fib_1.5'])
+    diff_open_fib_1_618_h2_l1 = (open_val - fib_levels_21['Fib_1.618'])
 
-    diff_open_fib_0_5_h2_l2 = abs(open_val - fib_levels_22['Fib_0.5'])
-    diff_open_fib_0_618_h2_l2 = abs(open_val - fib_levels_22['Fib_0.618'])
-    diff_open_fib_1_5_h2_l2 = abs(open_val - fib_levels_22['Fib_1.5'])
-    diff_open_fib_1_618_h2_l2 = abs(open_val - fib_levels_22['Fib_1.618'])
+    diff_open_fib_0_5_h2_l2 = (open_val - fib_levels_22['Fib_0.5'])
+    diff_open_fib_0_618_h2_l2 = (open_val - fib_levels_22['Fib_0.618'])
+    diff_open_fib_1_5_h2_l2 = (open_val - fib_levels_22['Fib_1.5'])
+    diff_open_fib_1_618_h2_l2 = (open_val - fib_levels_22['Fib_1.618'])
 
     # Create a single row DataFrame for model prediction
     data = {
         'open': open_val,
-        '1': val_1,
-        '2': val_2,
-        '3': val_3,
-        '4': val_4,
+        #'1': val_1,
+        #'2': val_2,
+        #'3': val_3,
+        #'4': val_4,
         'Month': month,
         'Day': day,
-        'Year': year,
-        'Hour': hour,
-        'Minute': minute,
+        #'Year': year,
+        #'Hour': hour,
+        #'Minute': minute,
         'High_1': high_1,
         'Low_1': low_1,
         'Volume_1': volume_1,
@@ -162,7 +162,7 @@ else:
         'Diff_open_Fib_0.618_H2_L2': diff_open_fib_0_618_h2_l2,
         'Diff_open_Fib_1.5_H2_L2': diff_open_fib_1_5_h2_l2,
         'Diff_open_Fib_1.618_H2_L2': diff_open_fib_1_618_h2_l2,
-        #'Volume_Difference': volume_1 - volume_2,
+        'Volume_Difference': volume_1 - volume_2,
     }
 
     # Convert to DataFrame

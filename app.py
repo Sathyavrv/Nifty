@@ -120,7 +120,7 @@ else:
         'High_2': high_2,
         'Low_2': low_2,
         'Volume_2': volume_2,
-        'Volume_Difference': volume_2 - volume_1,
+        'Volume_Difference': abs(volume_2 - volume_1),
         'Fib_0.5_H1_L1': fib_levels_1['Fib_0.5'],
         'Fib_0.5_H1_L2': fib_levels_2['Fib_0.5'],
         'Fib_0.5_H2_L1': fib_levels_1['Fib_0.5'],

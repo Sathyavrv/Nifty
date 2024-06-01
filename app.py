@@ -68,8 +68,10 @@ else:
     low_2 = recent_data.iloc[-2]['Low']
     volume_2 = recent_data.iloc[-2]['Volume']
 
-    fib_levels_1 = calculate_fibonacci_levels(high_1, low_1)
-    fib_levels_2 = calculate_fibonacci_levels(high_2, low_2)
+    fib_levels_11 = calculate_fibonacci_levels(high_1, low_1)
+    fib_levels_12 = calculate_fibonacci_levels(high_1, low_2)
+    fib_levels_21 = calculate_fibonacci_levels(high_2, low_1)
+    fib_levels_22 = calculate_fibonacci_levels(high_2, low_2)
 
     # Calculate differences
     diff_open_1 = abs(open_val - val_1)
@@ -82,25 +84,25 @@ else:
     diff_open_high_2 = abs(open_val - high_2)
     diff_open_low_2 = abs(open_val - low_2)
 
-    diff_open_fib_0_5_h1_l1 = abs(open_val - fib_levels_1['Fib_0.5'])
-    diff_open_fib_0_618_h1_l1 = abs(open_val - fib_levels_1['Fib_0.618'])
-    diff_open_fib_1_5_h1_l1 = abs(open_val - fib_levels_1['Fib_1.5'])
-    diff_open_fib_1_618_h1_l1 = abs(open_val - fib_levels_1['Fib_1.618'])
+    diff_open_fib_0_5_h1_l1 = abs(open_val - fib_levels_11['Fib_0.5'])
+    diff_open_fib_0_618_h1_l1 = abs(open_val - fib_levels_11['Fib_0.618'])
+    diff_open_fib_1_5_h1_l1 = abs(open_val - fib_levels_11['Fib_1.5'])
+    diff_open_fib_1_618_h1_l1 = abs(open_val - fib_levels_11['Fib_1.618'])
 
-    diff_open_fib_0_5_h1_l2 = abs(open_val - fib_levels_2['Fib_0.5'])
-    diff_open_fib_0_618_h1_l2 = abs(open_val - fib_levels_2['Fib_0.618'])
-    diff_open_fib_1_5_h1_l2 = abs(open_val - fib_levels_2['Fib_1.5'])
-    diff_open_fib_1_618_h1_l2 = abs(open_val - fib_levels_2['Fib_1.618'])
+    diff_open_fib_0_5_h1_l2 = abs(open_val - fib_levels_12['Fib_0.5'])
+    diff_open_fib_0_618_h1_l2 = abs(open_val - fib_levels_12['Fib_0.618'])
+    diff_open_fib_1_5_h1_l2 = abs(open_val - fib_levels_12['Fib_1.5'])
+    diff_open_fib_1_618_h1_l2 = abs(open_val - fib_levels_12['Fib_1.618'])
 
-    diff_open_fib_0_5_h2_l1 = abs(open_val - fib_levels_1['Fib_0.5'])
-    diff_open_fib_0_618_h2_l1 = abs(open_val - fib_levels_1['Fib_0.618'])
-    diff_open_fib_1_5_h2_l1 = abs(open_val - fib_levels_1['Fib_1.5'])
-    diff_open_fib_1_618_h2_l1 = abs(open_val - fib_levels_1['Fib_1.618'])
+    diff_open_fib_0_5_h2_l1 = abs(open_val - fib_levels_21['Fib_0.5'])
+    diff_open_fib_0_618_h2_l1 = abs(open_val - fib_levels_21['Fib_0.618'])
+    diff_open_fib_1_5_h2_l1 = abs(open_val - fib_levels_21['Fib_1.5'])
+    diff_open_fib_1_618_h2_l1 = abs(open_val - fib_levels_21['Fib_1.618'])
 
-    diff_open_fib_0_5_h2_l2 = abs(open_val - fib_levels_2['Fib_0.5'])
-    diff_open_fib_0_618_h2_l2 = abs(open_val - fib_levels_2['Fib_0.618'])
-    diff_open_fib_1_5_h2_l2 = abs(open_val - fib_levels_2['Fib_1.5'])
-    diff_open_fib_1_618_h2_l2 = abs(open_val - fib_levels_2['Fib_1.618'])
+    diff_open_fib_0_5_h2_l2 = abs(open_val - fib_levels_22['Fib_0.5'])
+    diff_open_fib_0_618_h2_l2 = abs(open_val - fib_levels_22['Fib_0.618'])
+    diff_open_fib_1_5_h2_l2 = abs(open_val - fib_levels_22['Fib_1.5'])
+    diff_open_fib_1_618_h2_l2 = abs(open_val - fib_levels_22['Fib_1.618'])
 
     # Create a single row DataFrame for model prediction
     data = {
@@ -121,22 +123,22 @@ else:
         'Low_2': low_2,
         'Volume_2': volume_2,
         'Volume_Difference': volume_1 - volume_2,
-        'Fib_0.5_H1_L1': fib_levels_1['Fib_0.5'],
-        'Fib_0.5_H1_L2': fib_levels_2['Fib_0.5'],
-        'Fib_0.5_H2_L1': fib_levels_1['Fib_0.5'],
-        'Fib_0.5_H2_L2': fib_levels_2['Fib_0.5'],
-        'Fib_0.618_H1_L1': fib_levels_1['Fib_0.618'],
-        'Fib_0.618_H1_L2': fib_levels_2['Fib_0.618'],
-        'Fib_0.618_H2_L1': fib_levels_1['Fib_0.618'],
-        'Fib_0.618_H2_L2': fib_levels_2['Fib_0.618'],
-        'Fib_1.5_H1_L1': fib_levels_1['Fib_1.5'],
-        'Fib_1.5_H1_L2': fib_levels_2['Fib_1.5'],
-        'Fib_1.5_H2_L1': fib_levels_1['Fib_1.5'],
-        'Fib_1.5_H2_L2': fib_levels_2['Fib_1.5'],
-        'Fib_1.618_H1_L1': fib_levels_1['Fib_1.618'],
-        'Fib_1.618_H1_L2': fib_levels_2['Fib_1.618'],
-        'Fib_1.618_H2_L1': fib_levels_1['Fib_1.618'],
-        'Fib_1.618_H2_L2': fib_levels_2['Fib_1.618'],
+        'Fib_0.5_H1_L1': fib_levels_11['Fib_0.5'],
+        'Fib_0.5_H1_L2': fib_levels_12['Fib_0.5'],
+        'Fib_0.5_H2_L1': fib_levels_21['Fib_0.5'],
+        'Fib_0.5_H2_L2': fib_levels_22['Fib_0.5'],
+        'Fib_0.618_H1_L1': fib_levels_11['Fib_0.618'],
+        'Fib_0.618_H1_L2': fib_levels_12['Fib_0.618'],
+        'Fib_0.618_H2_L1': fib_levels_21['Fib_0.618'],
+        'Fib_0.618_H2_L2': fib_levels_22['Fib_0.618'],
+        'Fib_1.5_H1_L1': fib_levels_11['Fib_1.5'],
+        'Fib_1.5_H1_L2': fib_levels_12['Fib_1.5'],
+        'Fib_1.5_H2_L1': fib_levels_21['Fib_1.5'],
+        'Fib_1.5_H2_L2': fib_levels_22['Fib_1.5'],
+        'Fib_1.618_H1_L1': fib_levels_11['Fib_1.618'],
+        'Fib_1.618_H1_L2': fib_levels_12['Fib_1.618'],
+        'Fib_1.618_H2_L1': fib_levels_21['Fib_1.618'],
+        'Fib_1.618_H2_L2': fib_levels_22['Fib_1.618'],
         'Diff_open_1': diff_open_1,
         'Diff_open_2': diff_open_2,
         'Diff_open_3': diff_open_3,

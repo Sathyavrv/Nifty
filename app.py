@@ -27,7 +27,7 @@ def calculate_fibonacci_levels(high, low):
 
 # Load your pre-trained model
 def load_model():
-    return joblib.load("updated_lgb_model.pkl")
+    return joblib.load("no_time_lgb_model.pkl")
 
 # UI Setup
 st.set_page_config(page_title="Stock Prediction", page_icon="📈", layout="centered")

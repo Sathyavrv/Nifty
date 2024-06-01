@@ -122,7 +122,6 @@ else:
         'High_2': high_2,
         'Low_2': low_2,
         'Volume_2': volume_2,
-        'Volume_Difference': volume_1 - volume_2,
         'Fib_0.5_H1_L1': fib_levels_11['Fib_0.5'],
         'Fib_0.5_H1_L2': fib_levels_12['Fib_0.5'],
         'Fib_0.5_H2_L1': fib_levels_21['Fib_0.5'],
@@ -162,7 +161,8 @@ else:
         'Diff_open_Fib_0.5_H2_L2': diff_open_fib_0_5_h2_l2,
         'Diff_open_Fib_0.618_H2_L2': diff_open_fib_0_618_h2_l2,
         'Diff_open_Fib_1.5_H2_L2': diff_open_fib_1_5_h2_l2,
-        'Diff_open_Fib_1.618_H2_L2': diff_open_fib_1_618_h2_l2
+        'Diff_open_Fib_1.618_H2_L2': diff_open_fib_1_618_h2_l2,
+        'Volume_Difference': volume_1 - volume_2,
     }
 
     # Convert to DataFrame

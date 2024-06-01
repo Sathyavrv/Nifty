@@ -19,10 +19,10 @@ def get_recent_data(ticker, selected_date):
 # Function to calculate Fibonacci levels
 def calculate_fibonacci_levels(high, low):
     return {
-        'Fib_0.5': low + 0.5 * (high - low),
-        'Fib_0.618': low + 0.618 * (high - low),
-        'Fib_1.5': low + 1.5 * (high - low),
-        'Fib_1.618': low + 1.618 * (high - low)
+        'Fib_0.5': high - (high - low) * 0.5,
+        'Fib_0.618': high - (high - low) * 0.618,
+        'Fib_1.5': high +  (high - low) * 1.5,
+        'Fib_1.618': high +  (high - low) * 1.618
     }
 
 # Load your pre-trained model
@@ -72,35 +72,35 @@ else:
     fib_levels_2 = calculate_fibonacci_levels(high_2, low_2)
 
     # Calculate differences
-    diff_open_1 = open_val - val_1
-    diff_open_2 = open_val - val_2
-    diff_open_3 = open_val - val_3
-    diff_open_4 = open_val - val_4
+    diff_open_1 = abs(open_val - val_1)
+    diff_open_2 = abs(open_val - val_2)
+    diff_open_3 = abs(open_val - val_3)
+    diff_open_4 = abs(open_val - val_4)
 
-    diff_open_high_1 = open_val - high_1
-    diff_open_low_1 = open_val - low_1
-    diff_open_high_2 = open_val - high_2
-    diff_open_low_2 = open_val - low_2
+    diff_open_high_1 = abs(open_val - high_1)
+    diff_open_low_1 = abs(open_val - low_1)
+    diff_open_high_2 = abs(open_val - high_2)
+    diff_open_low_2 = abs(open_val - low_2)
 
-    diff_open_fib_0_5_h1_l1 = open_val - fib_levels_1['Fib_0.5']
-    diff_open_fib_0_618_h1_l1 = open_val - fib_levels_1['Fib_0.618']
-    diff_open_fib_1_5_h1_l1 = open_val - fib_levels_1['Fib_1.5']
-    diff_open_fib_1_618_h1_l1 = open_val - fib_levels_1['Fib_1.618']
+    diff_open_fib_0_5_h1_l1 = abs(open_val - fib_levels_1['Fib_0.5'])
+    diff_open_fib_0_618_h1_l1 = abs(open_val - fib_levels_1['Fib_0.618'])
+    diff_open_fib_1_5_h1_l1 = abs(open_val - fib_levels_1['Fib_1.5'])
+    diff_open_fib_1_618_h1_l1 = abs(open_val - fib_levels_1['Fib_1.618'])
 
-    diff_open_fib_0_5_h1_l2 = open_val - fib_levels_2['Fib_0.5']
-    diff_open_fib_0_618_h1_l2 = open_val - fib_levels_2['Fib_0.618']
-    diff_open_fib_1_5_h1_l2 = open_val - fib_levels_2['Fib_1.5']
-    diff_open_fib_1_618_h1_l2 = open_val - fib_levels_2['Fib_1.618']
+    diff_open_fib_0_5_h1_l2 = abs(open_val - fib_levels_2['Fib_0.5'])
+    diff_open_fib_0_618_h1_l2 = abs(open_val - fib_levels_2['Fib_0.618'])
+    diff_open_fib_1_5_h1_l2 = abs(open_val - fib_levels_2['Fib_1.5'])
+    diff_open_fib_1_618_h1_l2 = abs(open_val - fib_levels_2['Fib_1.618'])
 
-    diff_open_fib_0_5_h2_l1 = open_val - fib_levels_1['Fib_0.5']
-    diff_open_fib_0_618_h2_l1 = open_val - fib_levels_1['Fib_0.618']
-    diff_open_fib_1_5_h2_l1 = open_val - fib_levels_1['Fib_1.5']
-    diff_open_fib_1_618_h2_l1 = open_val - fib_levels_1['Fib_1.618']
+    diff_open_fib_0_5_h2_l1 = abs(open_val - fib_levels_1['Fib_0.5'])
+    diff_open_fib_0_618_h2_l1 = abs(open_val - fib_levels_1['Fib_0.618'])
+    diff_open_fib_1_5_h2_l1 = abs(open_val - fib_levels_1['Fib_1.5'])
+    diff_open_fib_1_618_h2_l1 = abs(open_val - fib_levels_1['Fib_1.618'])
 
-    diff_open_fib_0_5_h2_l2 = open_val - fib_levels_2['Fib_0.5']
-    diff_open_fib_0_618_h2_l2 = open_val - fib_levels_2['Fib_0.618']
-    diff_open_fib_1_5_h2_l2 = open_val - fib_levels_2['Fib_1.5']
-    diff_open_fib_1_618_h2_l2 = open_val - fib_levels_2['Fib_1.618']
+    diff_open_fib_0_5_h2_l2 = abs(open_val - fib_levels_2['Fib_0.5'])
+    diff_open_fib_0_618_h2_l2 = abs(open_val - fib_levels_2['Fib_0.618'])
+    diff_open_fib_1_5_h2_l2 = abs(open_val - fib_levels_2['Fib_1.5'])
+    diff_open_fib_1_618_h2_l2 = abs(open_val - fib_levels_2['Fib_1.618'])
 
     # Create a single row DataFrame for model prediction
     data = {

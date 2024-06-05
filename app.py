@@ -27,7 +27,7 @@ def calculate_fibonacci_levels(high, low):
 
 # Load your pre-trained model
 def load_model():
-    return joblib.load("lgb_model_fit_june3.pkl")
+    return joblib.load("lgb_model_fit_june5.pkl")
 
 def calculate_volume_difference(row):
     """
@@ -40,7 +40,6 @@ def calculate_volume_difference(row):
     int/float: The difference between volume_1 and volume_2.
     """
     return row['Volume_1'] - row['Volume_2']
-
 
 
 # UI Setup
@@ -117,6 +116,37 @@ else:
     diff_open_fib_1_5_h2_l2 = open_val - fib_levels_2['Fib_1.5']
     diff_open_fib_1_618_h2_l2 = open_val - fib_levels_2['Fib_1.618']
 
+    # differences for day open column
+    diff_day_open_1 = day_open - val_1
+    diff_day_open_2 = day_open - val_2
+    diff_day_open_3 = day_open - val_3
+    diff_day_open_4 = day_open - val_4
+
+    diff_day_open_high_1 = day_open - high_1
+    diff_day_open_low_1 = day_open - low_1
+    diff_day_open_high_2 = day_open - high_2
+    diff_day_open_low_2 = day_open - low_2
+
+    diff_day_open_fib_0_5_h1_l1 = day_open - fib_levels_1['Fib_0.5']
+    diff_day_open_fib_0_618_h1_l1 = day_open - fib_levels_1['Fib_0.618']
+    diff_day_open_fib_1_5_h1_l1 = day_open - fib_levels_1['Fib_1.5']
+    diff_day_open_fib_1_618_h1_l1 = day_open - fib_levels_1['Fib_1.618']
+
+    diff_day_open_fib_0_5_h1_l2 = day_open - fib_levels_2['Fib_0.5']
+    diff_day_open_fib_0_618_h1_l2 = day_open - fib_levels_2['Fib_0.618']
+    diff_day_open_fib_1_5_h1_l2 = day_open - fib_levels_2['Fib_1.5']
+    diff_day_open_fib_1_618_h1_l2 = day_open - fib_levels_2['Fib_1.618']
+
+    diff_day_open_fib_0_5_h2_l1 = day_open - fib_levels_1['Fib_0.5']
+    diff_day_open_fib_0_618_h2_l1 = day_open - fib_levels_1['Fib_0.618']
+    diff_day_open_fib_1_5_h2_l1 = day_open - fib_levels_1['Fib_1.5']
+    diff_day_open_fib_1_618_h2_l1 = day_open - fib_levels_1['Fib_1.618']
+
+    diff_day_open_fib_0_5_h2_l2 = day_open - fib_levels_2['Fib_0.5']
+    diff_day_open_fib_0_618_h2_l2 = day_open - fib_levels_2['Fib_0.618']
+    diff_day_open_fib_1_5_h2_l2 = day_open - fib_levels_2['Fib_1.5']
+    diff_day_open_fib_1_618_h2_l2 = day_open - fib_levels_2['Fib_1.618']
+
     Diff_open_day_open = open_val - day_open
 
     Volume_Percentage_Change = ((volume_1 - volume_2) / volume_2) * 100
@@ -130,8 +160,8 @@ else:
         'Month': month,
         'Day': day,
         'Year': year,
-        #'Hour': hour,
-        #'Minute': minute,
+        'Hour': hour,
+        'Minute': minute,
         'day_open': day_open,
         'High_1': high_1,
         'Low_1': low_1,
@@ -180,6 +210,32 @@ else:
         'Diff_open_Fib_0.618_H2_L2': diff_open_fib_0_618_h2_l2,
         'Diff_open_Fib_1.5_H2_L2': diff_open_fib_1_5_h2_l2,
         'Diff_open_Fib_1.618_H2_L2': diff_open_fib_1_618_h2_l2,
+
+        'Diff_day_open_1': diff_day_open_1,
+        'Diff_day_open_2': diff_day_open_2,
+        'Diff_day_open_3': diff_day_open_3,
+        'Diff_day_open_4': diff_day_open_4,
+        'Diff_day_open_High_1': diff_day_open_high_1,
+        'Diff_day_open_Low_1': diff_day_open_low_1,
+        'Diff_day_open_High_2': diff_day_open_high_2,
+        'Diff_day_open_Low_2': diff_day_open_low_2,
+        'Diff_day_open_Fib_0.5_H1_L1': diff_day_open_fib_0_5_h1_l1,
+        'Diff_day_open_Fib_0.618_H1_L1': diff_day_open_fib_0_618_h1_l1,
+        'Diff_day_open_Fib_1.5_H1_L1': diff_day_open_fib_1_5_h1_l1,
+        'Diff_day_open_Fib_1.618_H1_L1': diff_day_open_fib_1_618_h1_l1,
+        'Diff_day_open_Fib_0.5_H1_L2': diff_day_open_fib_0_5_h1_l2,
+        'Diff_day_open_Fib_0.618_H1_L2': diff_day_open_fib_0_618_h1_l2,
+        'Diff_day_open_Fib_1.5_H1_L2': diff_day_open_fib_1_5_h1_l2,
+        'Diff_day_open_Fib_1.618_H1_L2': diff_day_open_fib_1_618_h1_l2,
+        'Diff_day_open_Fib_0.5_H2_L1': diff_day_open_fib_0_5_h2_l1,
+        'Diff_day_open_Fib_0.618_H2_L1': diff_day_open_fib_0_618_h2_l1,
+        'Diff_day_open_Fib_1.5_H2_L1': diff_day_open_fib_1_5_h2_l1,
+        'Diff_day_open_Fib_1.618_H2_L1': diff_day_open_fib_1_618_h2_l1,
+        'Diff_day_open_Fib_0.5_H2_L2': diff_day_open_fib_0_5_h2_l2,
+        'Diff_day_open_Fib_0.618_H2_L2': diff_day_open_fib_0_618_h2_l2,
+        'Diff_day_open_Fib_1.5_H2_L2': diff_day_open_fib_1_5_h2_l2,
+        'Diff_day_open_Fib_1.618_H2_L2': diff_day_open_fib_1_618_h2_l2,
+
         'Volume_Difference': volume_1 - volume_2,
         'Volume_Percentage_Change':Volume_Percentage_Change,
         'Volume_Ratio': volume_1 / volume_2,

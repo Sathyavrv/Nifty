@@ -63,7 +63,7 @@ month = st.sidebar.selectbox('Month', list(range(1, 13)), index=current_time.mon
 day = st.sidebar.selectbox('Day', list(range(1, 32)), index=current_time.day - 1)
 year = st.sidebar.selectbox('Year', list(range(2000, current_time.year + 1)), index=current_time.year - 2000)
 hour = st.sidebar.selectbox('Hour', list(range(24)), index=current_time.hour)
-minute = st.sidebar.selectbox('Minute', list(range(60)), index=current_time.minute)
+minute = st.sidebar.selectbox('Minute', list(range(60)))
 
 # Construct the selected datetime
 selected_date = datetime(year, month, day, hour, minute)

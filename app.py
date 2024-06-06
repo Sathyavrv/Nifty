@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import yfinance as yf
@@ -28,7 +27,7 @@ def calculate_fibonacci_levels(high, low):
 
 # Load your pre-trained model
 def load_model():
-    return joblib.load("lgb_model_fit_june5.pkl")
+    return joblib.load("lgb_model_june5.pkl")
 
 def calculate_volume_difference(row):
     """
@@ -50,10 +49,10 @@ st.title("Stock Prediction Model")
 st.sidebar.header("Input Parameters")
 day_open = st.sidebar.number_input('day_open', value=22000)
 open_val = st.sidebar.number_input('Open', value=22000)
-#val_4 = st.sidebar.number_input('4', value=22000)
-#val_3 = st.sidebar.number_input('3', value=22000)
-#val_2 = st.sidebar.number_input('2', value=22000)
-#val_1 = st.sidebar.number_input('1', value=22000)
+val_4 = st.sidebar.number_input('4', value=22000)
+val_3 = st.sidebar.number_input('3', value=22000)
+val_2 = st.sidebar.number_input('2', value=22000)
+val_1 = st.sidebar.number_input('1', value=22000)
 volume_1 = st.sidebar.number_input('Volume_1', value=200000)
 
 # Selectors for date and time
@@ -63,7 +62,7 @@ month = st.sidebar.selectbox('Month', list(range(1, 13)), index=current_time.mon
 day = st.sidebar.selectbox('Day', list(range(1, 32)), index=current_time.day - 1)
 year = st.sidebar.selectbox('Year', list(range(2000, current_time.year + 1)), index=current_time.year - 2000)
 hour = st.sidebar.selectbox('Hour', list(range(24)), index=current_time.hour)
-minute = st.sidebar.selectbox('Minute', list(range  (60)), index=current_time.minute)
+minute = st.sidebar.selectbox('Minute', list(range(60)), index=current_time.minute)
 
 # Construct the selected datetime
 selected_date = datetime(year, month, day, hour, minute)
@@ -85,6 +84,12 @@ else:
 
     fib_levels_1 = calculate_fibonacci_levels(high_1, low_1)
     fib_levels_2 = calculate_fibonacci_levels(high_2, low_2)
+
+    # Calculate differences
+    diff_open_1 = open_val - val_1
+    diff_open_2 = open_val - val_2
+    diff_open_3 = open_val - val_3
+    diff_open_4 = open_val - val_4
 
     diff_open_high_1 = open_val - high_1
     diff_open_low_1 = open_val - low_1
@@ -110,6 +115,12 @@ else:
     diff_open_fib_0_618_h2_l2 = open_val - fib_levels_2['Fib_0.618']
     diff_open_fib_1_5_h2_l2 = open_val - fib_levels_2['Fib_1.5']
     diff_open_fib_1_618_h2_l2 = open_val - fib_levels_2['Fib_1.618']
+
+    # differences for day open column
+    diff_day_open_1 = day_open - val_1
+    diff_day_open_2 = day_open - val_2
+    diff_day_open_3 = day_open - val_3
+    diff_day_open_4 = day_open - val_4
 
     diff_day_open_high_1 = day_open - high_1
     diff_day_open_low_1 = day_open - low_1
@@ -142,6 +153,10 @@ else:
     # Create a single row DataFrame for model prediction
     data = {
         'open': open_val,
+        '1': val_1,
+        '2': val_2,
+        '3': val_3,
+        '4': val_4,
         'Month': month,
         'Day': day,
         'Year': year,
@@ -170,6 +185,10 @@ else:
         'Fib_1.618_H1_L2': fib_levels_2['Fib_1.618'],
         'Fib_1.618_H2_L1': fib_levels_1['Fib_1.618'],
         'Fib_1.618_H2_L2': fib_levels_2['Fib_1.618'],
+        'Diff_open_1': diff_open_1,
+        'Diff_open_2': diff_open_2,
+        'Diff_open_3': diff_open_3,
+        'Diff_open_4': diff_open_4,
         'Diff_open_day_open': Diff_open_day_open,
         'Diff_open_High_1': diff_open_high_1,
         'Diff_open_Low_1': diff_open_low_1,
@@ -191,6 +210,11 @@ else:
         'Diff_open_Fib_0.618_H2_L2': diff_open_fib_0_618_h2_l2,
         'Diff_open_Fib_1.5_H2_L2': diff_open_fib_1_5_h2_l2,
         'Diff_open_Fib_1.618_H2_L2': diff_open_fib_1_618_h2_l2,
+
+        'Diff_day_open_1': diff_day_open_1,
+        'Diff_day_open_2': diff_day_open_2,
+        'Diff_day_open_3': diff_day_open_3,
+        'Diff_day_open_4': diff_day_open_4,
         'Diff_day_open_High_1': diff_day_open_high_1,
         'Diff_day_open_Low_1': diff_day_open_low_1,
         'Diff_day_open_High_2': diff_day_open_high_2,

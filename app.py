@@ -253,11 +253,11 @@ else:
 
     # Predict using the model
     prediction = model.predict(input_data)
-    #prediction_proba = model.predict_proba(input_data)
+    prediction_proba = model.predict_proba(input_data)
 
     st.subheader("Model Prediction")
     st.write("Prediction:", prediction[0])
-    #st.write("Prediction Probability:", prediction_proba)
+    st.write("Prediction Probability:", prediction_proba)
 
     st.markdown("---")
     st.write("**Note:** Ensure that the retrieved data is correct and there are no missing values before proceeding with model prediction.")

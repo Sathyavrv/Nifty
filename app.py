@@ -304,7 +304,7 @@ else:
     data_df = pd.DataFrame([data])
 
     # Convert to DataFrame
-    input_data = pd.DataFrame([data])
+    input_data = pd.DataFrame([data_df])
     # Display the aggregated row
     st.subheader("Aggregated Data for Model Prediction")
     st.dataframe(input_data)

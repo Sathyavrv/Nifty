@@ -49,11 +49,6 @@ volume_1 = st.sidebar.number_input('Volume_1', value=200000)
 # Selectors for date and time
 st.sidebar.header("Select Date and Time")
 current_time = datetime.now()
-month = st.sidebar.selectbox('Month', list(range(1, 13)), index=current_time.month - 1)
-day = st.sidebar.selectbox('Day', list(range(1, 32)), index=current_time.day - 1)
-year = st.sidebar.selectbox('Year', list(range(2000, current_time.year + 1)), index=current_time.year - 2000)
-hour = st.sidebar.selectbox('Hour', list(range(24)), index=current_time.hour)
-minute = st.sidebar.number_input('minute', value=20)
 
 # Construct the selected datetime
 selected_date = datetime(year, month, day, hour, minute)

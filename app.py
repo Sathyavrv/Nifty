@@ -172,8 +172,53 @@ else:
     # Add the difference columns to the data dictionary
     data.update(diff_open_fib_columns)
     data.update(diff_day_open_fib_columns)
-    # Convert to DataFrame
-    input_data = pd.DataFrame([data])
+
+    # Convert data to DataFrame for prediction
+    data_df = pd.DataFrame([data])
+
+    # Ensure columns are in the required order
+    required_columns = [
+        'open', 'day_open', 'Current_High', 'Current_Low', 'High_1', 'Low_1',
+        'Volume_1', 'High_2', 'Low_2', 'Volume_2', 'Diff_Current_High_High_1',
+        'Diff_Current_High_High_2', 'Diff_Current_Low_Low_1', 'Diff_Current_Low_Low_2',
+        'Diff_High_1_High_2', 'Diff_Low_1_Low_2', 'Fib_0.382_H1_L1', 'Fib_0.382_H1_L2',
+        'Fib_0.382_H2_L1', 'Fib_0.382_H2_L2', 'Fib_0.382_L1_H1', 'Fib_0.382_L1_H2',
+        'Fib_0.382_L2_H1', 'Fib_0.382_L2_H2', 'Fib_current_0.382_H_L', 'Fib_current_0.382_L_H',
+        'Fib_0.5_H1_L1', 'Fib_0.5_H1_L2', 'Fib_0.5_H2_L1', 'Fib_0.5_H2_L2', 'Fib_0.5_L1_H1',
+        'Fib_0.5_L1_H2', 'Fib_0.5_L2_H1', 'Fib_0.5_L2_H2', 'Fib_current_0.5_H_L', 'Fib_current_0.5_L_H',
+        'Fib_0.618_H1_L1', 'Fib_0.618_H1_L2', 'Fib_0.618_H2_L1', 'Fib_0.618_H2_L2', 'Fib_0.618_L1_H1',
+        'Fib_0.618_L1_H2', 'Fib_0.618_L2_H1', 'Fib_0.618_L2_H2', 'Fib_current_0.618_H_L', 'Fib_current_0.618_L_H',
+        'Fib_0.786_H1_L1', 'Fib_0.786_H1_L2', 'Fib_0.786_H2_L1', 'Fib_0.786_H2_L2', 'Fib_0.786_L1_H1',
+        'Fib_0.786_L1_H2', 'Fib_0.786_L2_H1', 'Fib_0.786_L2_H2', 'Fib_current_0.786_H_L', 'Fib_current_0.786_L_H',
+        'Fib_1.5_H1_L1', 'Fib_1.5_H1_L2', 'Fib_1.5_H2_L1', 'Fib_1.5_H2_L2', 'Fib_1.5_L1_H1', 'Fib_1.5_L1_H2',
+        'Fib_1.5_L2_H1', 'Fib_1.5_L2_H2', 'Fib_current_1.5_H_L', 'Fib_current_1.5_L_H', 'Fib_1.618_H1_L1',
+        'Fib_1.618_H1_L2', 'Fib_1.618_H2_L1', 'Fib_1.618_H2_L2', 'Fib_1.618_L1_H1', 'Fib_1.618_L1_H2',
+        'Fib_1.618_L2_H1', 'Fib_1.618_L2_H2', 'Fib_current_1.618_H_L', 'Fib_current_1.618_L_H', 'Diff_open_day_open',
+        'Diff_open_High_1', 'Diff_open_Low_1', 'Diff_open_High_2', 'Diff_open_Low_2', 'Diff_open_Fib_0.382_H1_L1',
+        'Diff_open_Fib_0.5_H1_L1', 'Diff_open_Fib_0.618_H1_L1', 'Diff_open_Fib_1.5_H1_L1', 'Diff_open_Fib_1.618_H1_L1',
+        'Diff_open_Fib_0.382_H1_L2', 'Diff_open_Fib_0.5_H1_L2', 'Diff_open_Fib_0.618_H1_L2', 'Diff_open_Fib_1.5_H1_L2',
+        'Diff_open_Fib_1.618_H1_L2', 'Diff_open_Fib_0.382_H2_L1', 'Diff_open_Fib_0.5_H2_L1', 'Diff_open_Fib_0.618_H2_L1',
+        'Diff_open_Fib_1.5_H2_L1', 'Diff_open_Fib_1.618_H2_L1', 'Diff_open_Fib_0.382_H2_L2', 'Diff_open_Fib_0.5_H2_L2',
+        'Diff_open_Fib_0.618_H2_L2', 'Diff_open_Fib_1.5_H2_L2', 'Diff_open_Fib_1.618_H2_L2', 'Diff_day_open_High_1',
+        'Diff_day_open_Low_1', 'Diff_day_open_High_2', 'Diff_day_open_Low_2', 'Diff_day_open_Fib_0.382_H1_L1',
+        'Diff_day_open_Fib_0.5_H1_L1', 'Diff_day_open_Fib_0.618_H1_L1', 'Diff_day_open_Fib_1.5_H1_L1',
+        'Diff_day_open_Fib_1.618_H1_L1', 'Diff_day_open_Fib_0.382_H1_L2', 'Diff_day_open_Fib_0.5_H1_L2',
+        'Diff_day_open_Fib_0.618_H1_L2', 'Diff_day_open_Fib_1.5_H1_L2', 'Diff_day_open_Fib_1.618_H1_L2',
+        'Diff_day_open_Fib_0.382_H2_L1', 'Diff_day_open_Fib_0.5_H2_L1', 'Diff_day_open_Fib_0.618_H2_L1',
+        'Diff_day_open_Fib_1.5_H2_L1', 'Diff_day_open_Fib_1.618_H2_L1', 'Diff_day_open_Fib_0.382_H2_L2',
+        'Diff_day_open_Fib_0.5_H2_L2', 'Diff_day_open_Fib_0.618_H2_L2', 'Diff_day_open_Fib_1.5_H2_L2',
+        'Diff_day_open_Fib_1.618_H2_L2', 'Diff_open_Current_High', 'Diff_open_Current_Low', 'Diff_open_Fib_current_0.382_H_L',
+        'Diff_open_Fib_current_0.5_H_L', 'Diff_open_Fib_current_0.618_H_L', 'Diff_open_Fib_current_1.5_H_L',
+        'Diff_open_Fib_current_1.618_H_L', 'Diff_open_Fib_current_0.382_L_H', 'Diff_open_Fib_current_0.5_L_H',
+        'Diff_open_Fib_current_0.618_L_H', 'Diff_open_Fib_current_1.5_L_H', 'Diff_open_Fib_current_1.618_L_H',
+        'Volume_Difference', 'Volume_Percentage_Change', 'Volume_Ratio', 'Volume_Sum', 'High_Low_Difference',
+        'Diff_day_open_Current_High', 'Diff_day_open_Current_Low'
+    ]
+
+    # Reorder the columns in the data DataFrame
+    data_df = data_df[required_columns]
+
+    input_data = data_df
     # Display the aggregated row
     st.subheader("Aggregated Data for Model Prediction")
     st.dataframe(input_data)

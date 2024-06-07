@@ -19,7 +19,7 @@ def get_recent_data(ticker, selected_date):
 
 # Load your pre-trained model
 def load_model():
-    return joblib.load("lgb_model_fit_june6.pkl")
+    return joblib.load("lgb_model_june6.pkl")
 def calculate_fibonacci_levels(df):
     fib_ratios = [0.382, 0.5, 0.618,0.786, 1.5, 1.618]
     for ratio in fib_ratios:
@@ -228,11 +228,11 @@ else:
 
     # Predict using the model
     prediction = model.predict(input_data)
-    #prediction_proba = model.predict_proba(input_data)
+    prediction_proba = model.predict_proba(input_data)
 
     st.subheader("Model Prediction")
     st.write("Prediction:", prediction[0])
-    #st.write("Prediction Probability:", prediction_proba)
+    st.write("Prediction Probability:", prediction_proba)
 
     st.markdown("---")
     st.write("**Note:** Ensure that the retrieved data is correct and there are no missing values before proceeding with model prediction.")

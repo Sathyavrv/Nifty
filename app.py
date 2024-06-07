@@ -19,8 +19,7 @@ def get_recent_data(ticker, selected_date):
 
 # Load your pre-trained model
 def load_model():
-    return joblib.load("lgb_model_fit_june5.pkl")
-
+    return joblib.load("lgb_model_fit_june6_noyear.pkl")
 def calculate_fibonacci_levels(df):
     fib_ratios = [0.382, 0.5, 0.618, 1.5, 1.618]
     for ratio in fib_ratios:
@@ -80,69 +79,35 @@ else:
     })
     df = calculate_fibonacci_levels(df)
 
-    fib_levels_1 = {
-        'Fib_0.382': df.loc[0, 'Fib_0.382_H1_L1'], 'Fib_0.5': df.loc[0, 'Fib_0.5_H1_L1'],
-        'Fib_0.618': df.loc[0, 'Fib_0.618_H1_L1'], 'Fib_1.5': df.loc[0, 'Fib_1.5_H1_L1'],
-        'Fib_1.618': df.loc[0, 'Fib_1.618_H1_L1']
-    }
-    fib_levels_2 = {
-        'Fib_0.382': df.loc[0, 'Fib_0.382_H1_L2'], 'Fib_0.5': df.loc[0, 'Fib_0.5_H1_L2'],
-        'Fib_0.618': df.loc[0, 'Fib_0.618_H1_L2'], 'Fib_1.5': df.loc[0, 'Fib_1.5_H1_L2'],
-        'Fib_1.618': df.loc[0, 'Fib_1.618_H1_L2']
-    }
-
-    fib_levels_l1_h1 = {
-        'Fib_0.382': df.loc[0, 'Fib_0.382_L1_H1'], 'Fib_0.5': df.loc[0, 'Fib_0.5_L1_H1'],
-        'Fib_0.618': df.loc[0, 'Fib_0.618_L1_H1'], 'Fib_1.5': df.loc[0, 'Fib_1.5_L1_H1'],
-        'Fib_1.618': df.loc[0, 'Fib_1.618_L1_H1']
-    }
-    fib_levels_l1_h2 = {
-        'Fib_0.382': df.loc[0, 'Fib_0.382_L1_H2'], 'Fib_0.5': df.loc[0, 'Fib_0.5_L1_H2'],
-        'Fib_0.618': df.loc[0, 'Fib_0.618_L1_H2'], 'Fib_1.5': df.loc[0, 'Fib_1.5_L1_H2'],
-        'Fib_1.618': df.loc[0, 'Fib_1.618_L1_H2']
-    }
-    fib_levels_l2_h1 = {
-        'Fib_0.382': df.loc[0, 'Fib_0.382_L2_H1'], 'Fib_0.5': df.loc[0, 'Fib_0.5_L2_H1'],
-        'Fib_0.618': df.loc[0, 'Fib_0.618_L2_H1'], 'Fib_1.5': df.loc[0, 'Fib_1.5_L2_H1'],
-        'Fib_1.618': df.loc[0, 'Fib_1.618_L2_H1']
-    }
-    fib_levels_l2_h2 = {
-        'Fib_0.382': df.loc[0, 'Fib_0.382_L2_H2'], 'Fib_0.5': df.loc[0, 'Fib_0.5_L2_H2'],
-        'Fib_0.618': df.loc[0, 'Fib_0.618_L2_H2'], 'Fib_1.5': df.loc[0, 'Fib_1.5_L2_H2'],
-        'Fib_1.618': df.loc[0, 'Fib_1.618_L2_H2']
-    }
-
-
-
     # Calculate differences
     diff_open_high_1 = open_val - high_1
     diff_open_low_1 = open_val - low_1
     diff_open_high_2 = open_val - high_2
     diff_open_low_2 = open_val - low_2
 
-    diff_open_fib_0_382_h1_l1 = open_val - fib_levels_1['Fib_0.382']
-    diff_open_fib_0_5_h1_l1 = open_val - fib_levels_1['Fib_0.5']
-    diff_open_fib_0_618_h1_l1 = open_val - fib_levels_1['Fib_0.618']
-    diff_open_fib_1_5_h1_l1 = open_val - fib_levels_1['Fib_1.5']
-    diff_open_fib_1_618_h1_l1 = open_val - fib_levels_1['Fib_1.618']
+    diff_open_fib_0_382_h1_l1 = open_val - df.loc[0, 'Fib_0.382_H1_L1']
+    diff_open_fib_0_5_h1_l1 = open_val - df.loc[0, 'Fib_0.5_H1_L1']
+    diff_open_fib_0_618_h1_l1 = open_val - df.loc[0, 'Fib_0.618_H1_L1']
+    diff_open_fib_1_5_h1_l1 = open_val - df.loc[0, 'Fib_1.5_H1_L1']
+    diff_open_fib_1_618_h1_l1 = open_val - df.loc[0, 'Fib_1.618_H1_L1']
 
-    diff_open_fib_0_382_h1_l2 = open_val - fib_levels_2['Fib_0.382']
-    diff_open_fib_0_5_h1_l2 = open_val - fib_levels_2['Fib_0.5']
-    diff_open_fib_0_618_h1_l2 = open_val - fib_levels_2['Fib_0.618']
-    diff_open_fib_1_5_h1_l2 = open_val - fib_levels_2['Fib_1.5']
-    diff_open_fib_1_618_h1_l2 = open_val - fib_levels_2['Fib_1.618']
+    diff_open_fib_0_382_h1_l2 = open_val - df.loc[0, 'Fib_0.382_H1_L2']
+    diff_open_fib_0_5_h1_l2 = open_val - df.loc[0, 'Fib_0.5_H1_L2']
+    diff_open_fib_0_618_h1_l2 = open_val - df.loc[0, 'Fib_0.618_H1_L2']
+    diff_open_fib_1_5_h1_l2 = open_val - df.loc[0, 'Fib_1.5_H1_L2']
+    diff_open_fib_1_618_h1_l2 = open_val - df.loc[0, 'Fib_1.618_H1_L2']
 
-    diff_open_fib_0_382_h2_l1 = open_val - fib_levels_1['Fib_0.382']
-    diff_open_fib_0_5_h2_l1 = open_val - fib_levels_1['Fib_0.5']
-    diff_open_fib_0_618_h2_l1 = open_val - fib_levels_1['Fib_0.618']
-    diff_open_fib_1_5_h2_l1 = open_val - fib_levels_1['Fib_1.5']
-    diff_open_fib_1_618_h2_l1 = open_val - fib_levels_1['Fib_1.618']
+    diff_open_fib_0_382_h2_l1 = open_val - df.loc[0, 'Fib_0.382_H2_L1']
+    diff_open_fib_0_5_h2_l1 = open_val - df.loc[0, 'Fib_0.5_H2_L1']
+    diff_open_fib_0_618_h2_l1 = open_val - df.loc[0, 'Fib_0.618_H2_L1']
+    diff_open_fib_1_5_h2_l1 = open_val - df.loc[0, 'Fib_1.5_H2_L1']
+    diff_open_fib_1_618_h2_l1 = open_val - df.loc[0, 'Fib_1.618_H2_L1']
 
-    diff_open_fib_0_382_h2_l2 = open_val - fib_levels_2['Fib_0.382']
-    diff_open_fib_0_5_h2_l2 = open_val - fib_levels_2['Fib_0.5']
-    diff_open_fib_0_618_h2_l2 = open_val - fib_levels_2['Fib_0.618']
-    diff_open_fib_1_5_h2_l2 = open_val - fib_levels_2['Fib_1.5']
-    diff_open_fib_1_618_h2_l2 = open_val - fib_levels_2['Fib_1.618']
+    diff_open_fib_0_382_h2_l2 = open_val - df.loc[0, 'Fib_0.382_H2_L2']
+    diff_open_fib_0_5_h2_l2 = open_val - df.loc[0, 'Fib_0.5_H2_L2']
+    diff_open_fib_0_618_h2_l2 = open_val - df.loc[0, 'Fib_0.618_H2_L2']
+    diff_open_fib_1_5_h2_l2 = open_val - df.loc[0, 'Fib_1.5_H2_L2']
+    diff_open_fib_1_618_h2_l2 = open_val - df.loc[0, 'Fib_1.618_H2_L2']
 
     # Differences for day open column
     diff_day_open_high_1 = day_open - high_1
@@ -150,29 +115,29 @@ else:
     diff_day_open_high_2 = day_open - high_2
     diff_day_open_low_2 = day_open - low_2
 
-    diff_day_open_fib_0_382_h1_l1 = day_open - fib_levels_1['Fib_0.382']
-    diff_day_open_fib_0_5_h1_l1 = day_open - fib_levels_1['Fib_0.5']
-    diff_day_open_fib_0_618_h1_l1 = day_open - fib_levels_1['Fib_0.618']
-    diff_day_open_fib_1_5_h1_l1 = day_open - fib_levels_1['Fib_1.5']
-    diff_day_open_fib_1_618_h1_l1 = day_open - fib_levels_1['Fib_1.618']
+    diff_day_open_fib_0_382_h1_l1 = day_open - df.loc[0, 'Fib_0.382_H1_L1']
+    diff_day_open_fib_0_5_h1_l1 = day_open - df.loc[0, 'Fib_0.5_H1_L1']
+    diff_day_open_fib_0_618_h1_l1 = day_open - df.loc[0, 'Fib_0.618_H1_L1']
+    diff_day_open_fib_1_5_h1_l1 = day_open - df.loc[0, 'Fib_1.5_H1_L1']
+    diff_day_open_fib_1_618_h1_l1 = day_open - df.loc[0, 'Fib_1.618_H1_L1']
 
-    diff_day_open_fib_0_382_h1_l2 = day_open - fib_levels_2['Fib_0.382']
-    diff_day_open_fib_0_5_h1_l2 = day_open - fib_levels_2['Fib_0.5']
-    diff_day_open_fib_0_618_h1_l2 = day_open - fib_levels_2['Fib_0.618']
-    diff_day_open_fib_1_5_h1_l2 = day_open - fib_levels_2['Fib_1.5']
-    diff_day_open_fib_1_618_h1_l2 = day_open - fib_levels_2['Fib_1.618']
+    diff_day_open_fib_0_382_h1_l2 = day_open - df.loc[0, 'Fib_0.382_H1_L2']
+    diff_day_open_fib_0_5_h1_l2 = day_open - df.loc[0, 'Fib_0.5_H1_L2']
+    diff_day_open_fib_0_618_h1_l2 = day_open - df.loc[0, 'Fib_0.618_H1_L2']
+    diff_day_open_fib_1_5_h1_l2 = day_open - df.loc[0, 'Fib_1.5_H1_L2']
+    diff_day_open_fib_1_618_h1_l2 = day_open - df.loc[0, 'Fib_1.618_H1_L2']
 
-    diff_day_open_fib_0_382_h2_l1 = day_open - fib_levels_1['Fib_0.382']
-    diff_day_open_fib_0_5_h2_l1 = day_open - fib_levels_1['Fib_0.5']
-    diff_day_open_fib_0_618_h2_l1 = day_open - fib_levels_1['Fib_0.618']
-    diff_day_open_fib_1_5_h2_l1 = day_open - fib_levels_1['Fib_1.5']
-    diff_day_open_fib_1_618_h2_l1 = day_open - fib_levels_1['Fib_1.618']
+    diff_day_open_fib_0_382_h2_l1 = day_open - df.loc[0, 'Fib_0.382_H2_L1']
+    diff_day_open_fib_0_5_h2_l1 = day_open - df.loc[0, 'Fib_0.5_H2_L1']
+    diff_day_open_fib_0_618_h2_l1 = day_open - df.loc[0, 'Fib_0.618_H2_L1']
+    diff_day_open_fib_1_5_h2_l1 = day_open - df.loc[0, 'Fib_1.5_H2_L1']
+    diff_day_open_fib_1_618_h2_l1 = day_open - df.loc[0, 'Fib_1.618_H2_L1']
 
-    diff_day_open_fib_0_382_h2_l2 = day_open - fib_levels_2['Fib_0.382']
-    diff_day_open_fib_0_5_h2_l2 = day_open - fib_levels_2['Fib_0.5']
-    diff_day_open_fib_0_618_h2_l2 = day_open - fib_levels_2['Fib_0.618']
-    diff_day_open_fib_1_5_h2_l2 = day_open - fib_levels_2['Fib_1.5']
-    diff_day_open_fib_1_618_h2_l2 = day_open - fib_levels_2['Fib_1.618']
+    diff_day_open_fib_0_382_h2_l2 = day_open - df.loc[0, 'Fib_0.382_H2_L2']
+    diff_day_open_fib_0_5_h2_l2 = day_open - df.loc[0, 'Fib_0.5_H2_L2']
+    diff_day_open_fib_0_618_h2_l2 = day_open - df.loc[0, 'Fib_0.618_H2_L2']
+    diff_day_open_fib_1_5_h2_l2 = day_open - df.loc[0, 'Fib_1.5_H2_L2']
+    diff_day_open_fib_1_618_h2_l2 = day_open - df.loc[0, 'Fib_1.618_H2_L2']
 
     diff_open_fib_current_0_382_h_l = open_val - df.loc[0, 'Fib_current_0.382_H_L']
     diff_open_fib_current_0_5_h_l = open_val - df.loc[0, 'Fib_current_0.5_H_L']
@@ -192,14 +157,14 @@ else:
     volume_sum = volume_1 + volume_2
 
     diff_open_day_open = open_val - day_open
+    diff_open_current_high = open_val - current_high
+    diff_open_current_low = open_val - current_low
+    diff_day_open_current_high = day_open - current_high
+    diff_day_open_current_low = day_open - current_low
+
     # Create a single row DataFrame for model prediction
     data = {
         'open': open_val,
-        'Month': month,
-        'Day': day,
-        'Year': year,
-        'Hour': hour,
-        'Minute': minute,
         'day_open': day_open,
         'Current_High': current_high,
         'Current_Low': current_low,
@@ -209,6 +174,12 @@ else:
         'High_2': high_2,
         'Low_2': low_2,
         'Volume_2': volume_2,
+        'Diff_Current_High_High_1': current_high - high_1,
+        'Diff_Current_High_High_2': current_high - high_2,
+        'Diff_Current_Low_Low_1': current_low - low_1,
+        'Diff_Current_Low_Low_2': current_low - low_2,
+        'Diff_High_1_High_2': high_1 - high_2,
+        'Diff_Low_1_Low_2': low_1 - low_2,
         'Fib_0.382_H1_L1': df.loc[0, 'Fib_0.382_H1_L1'],
         'Fib_0.382_H1_L2': df.loc[0, 'Fib_0.382_H1_L2'],
         'Fib_0.382_H2_L1': df.loc[0, 'Fib_0.382_H2_L1'],
@@ -308,6 +279,8 @@ else:
         'Diff_day_open_Fib_0.618_H2_L2': diff_day_open_fib_0_618_h2_l2,
         'Diff_day_open_Fib_1.5_H2_L2': diff_day_open_fib_1_5_h2_l2,
         'Diff_day_open_Fib_1.618_H2_L2': diff_day_open_fib_1_618_h2_l2,
+        'Diff_open_Current_High': diff_open_current_high,
+        'Diff_open_Current_Low': diff_open_current_low,
         'Diff_open_Fib_current_0.382_H_L': diff_open_fib_current_0_382_h_l,
         'Diff_open_Fib_current_0.5_H_L': diff_open_fib_current_0_5_h_l,
         'Diff_open_Fib_current_0.618_H_L': diff_open_fib_current_0_618_h_l,
@@ -321,9 +294,14 @@ else:
         'Volume_Difference': volume_difference,
         'Volume_Percentage_Change': volume_percentage_change,
         'Volume_Ratio': volume_ratio,
-        'Volume_Sum': volume_sum
+        'Volume_Sum': volume_sum,
+        'High_Low_Difference': current_high - current_low,
+        'Diff_day_open_Current_High': diff_day_open_current_high,
+        'Diff_day_open_Current_Low': diff_day_open_current_low
     }
 
+    # Convert data to DataFrame for prediction
+    data_df = pd.DataFrame([data])
 
     # Convert to DataFrame
     input_data = pd.DataFrame([data])

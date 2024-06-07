@@ -94,12 +94,10 @@ else:
     diff_day_open_current_low = day_open - current_low
 
     fib_ratios = [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]
-    fib_columns = ['Fib_0.382', 'Fib_0.5', 'Fib_0.618', 'Fib_0.786', 'Fib_1.5', 'Fib_1.618']
-    
     diff_open_fib_columns = {}
     diff_day_open_fib_columns = {}
 
-    for ratio, fib_col in zip(fib_ratios, fib_columns):
+    for ratio in fib_ratios:
         diff_open_fib_columns[f'Diff_open_Fib_{ratio}_H1_L1'] = open_val - df[f'Fib_{ratio}_H1_L1'][0]
         diff_open_fib_columns[f'Diff_open_Fib_{ratio}_H1_L2'] = open_val - df[f'Fib_{ratio}_H1_L2'][0]
         diff_open_fib_columns[f'Diff_open_Fib_{ratio}_H2_L1'] = open_val - df[f'Fib_{ratio}_H2_L1'][0]

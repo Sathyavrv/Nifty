@@ -300,11 +300,9 @@ else:
         'Diff_day_open_Current_Low': diff_day_open_current_low
     }
 
-    # Convert data to DataFrame for prediction
-    data_df = pd.DataFrame([data])
 
     # Convert to DataFrame
-    input_data = pd.DataFrame([data_df])
+    input_data = pd.DataFrame([data])
     # Display the aggregated row
     st.subheader("Aggregated Data for Model Prediction")
     st.dataframe(input_data)

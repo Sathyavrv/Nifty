@@ -21,7 +21,7 @@ def get_recent_data(ticker, selected_date):
 def load_model():
     return joblib.load("lgb_model_fit_june6_noyear.pkl")
 def calculate_fibonacci_levels(df):
-    fib_ratios = [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]
+    fib_ratios = [0.382, 0.5, 0.618, 1.5, 1.618]
     for ratio in fib_ratios:
         df[f'Fib_{ratio}_H1_L1'] = df['High_1'] - (df['High_1'] - df['Low_1']) * ratio
         df[f'Fib_{ratio}_H1_L2'] = df['High_1'] - (df['High_1'] - df['Low_2']) * ratio
@@ -93,7 +93,7 @@ else:
     diff_day_open_current_high = day_open - current_high
     diff_day_open_current_low = day_open - current_low
 
-    fib_ratios = [0.382, 0.5, 0.618, 1.5, 1.618]
+    fib_ratios = [0.382, 0.5, 0.618,0.786, 1.5, 1.618]
     diff_open_fib_columns = {}
     diff_day_open_fib_columns = {}
 

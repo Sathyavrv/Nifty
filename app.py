@@ -115,7 +115,7 @@ else:
 
     df = pd.DataFrame({
         'open':[open_val],'day_open':[day_open],'High_1': [high_1], 'Low_1': [low_1], 'High_2': [high_2], 'Low_2': [low_2],
-        'Current_High': [current_high], 'Current_Low': [current_low],'Volume_1':Volume_1,'Volume_2':Volume_2,
+        'Current_High': [current_high], 'Current_Low': [current_low],'Volume_1':[volume_1],'Volume_2':[volume_2],
     })
     df = calculate_fibonacci_levels(df)
     df = calculate_column_differences(df)

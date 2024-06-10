@@ -112,6 +112,12 @@ else:
     high_2 = recent_data.iloc[-2]['High']
     low_2 = recent_data.iloc[-2]['Low']
     volume_2 = recent_data.iloc[-2]['Volume']
+    df = pd.DataFrame({
+        'High_1': [high_1], 'Low_1': [low_1], 'High_2': [high_2], 'Low_2': [low_2],
+        'Current_High': [current_high], 'Current_Low': [current_low]
+    })
+    df = calculate_fibonacci_levels(df)
+    df = calculate_column_differences(df)
 
     # Create a single row DataFrame for model prediction
     data = {

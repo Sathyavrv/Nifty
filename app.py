@@ -119,24 +119,7 @@ else:
     df = calculate_fibonacci_levels(df)
     df = calculate_column_differences(df)
 
-    # Calculate differences for new columns
-    base_columns = ['open_val', 'day_open']
-    columns_to_diff = ['open_val', 'day_open', 'Current_High', 'Current_Low', 'High_1', 'Low_1', 'Volume_1',
-                       'High_2', 'Low_2', 'Volume_2', 'Diff_Current_High_High_1', 'Diff_Current_High_High_2',
-                       'Diff_Current_Low_Low_1', 'Diff_Current_Low_Low_2', 'Diff_High_1_High_2', 'Diff_Low_1_Low_2'] + \
-                      [f'Fib_{ratio}_High_1_Low_1' for ratio in [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]] + \
-                      [f'Fib_{ratio}_High_1_Low_2' for ratio in [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]] + \
-                      [f'Fib_{ratio}_High_2_Low_1' for ratio in [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]] + \
-                      [f'Fib_{ratio}_High_2_Low_2' for ratio in [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]] + \
-                      [f'Fib_{ratio}_Low_1_High_1' for ratio in [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]] + \
-                      [f'Fib_{ratio}_Low_1_High_2' for ratio in [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]] + \
-                      [f'Fib_{ratio}_Low_2_High_1' for ratio in [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]] + \
-                      [f'Fib_{ratio}_Low_2_High_2' for ratio in [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]] + \
-                      [f'Fib_{ratio}_Current_High_Current_Low' for ratio in [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]] + \
-                      [f'Fib_{ratio}_Current_Low_Current_High' for ratio in [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]]
-
-    df = calculate_all_differences(df, base_columns, columns_to_diff)
-
+    
     df['Volume_Difference'] = df.apply(calculate_volume_difference, axis=1)
     df['Volume_Percentage_Change'] = df.apply(calculate_percentage_change, axis=1)
     df['Volume_Ratio'] = df.apply(calculate_volume_ratio, axis=1)

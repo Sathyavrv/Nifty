@@ -18,7 +18,7 @@ def get_recent_data(ticker, selected_date):
 
 # Load your pre-trained model
 def load_model():
-    return joblib.load("lgb_model_june7.pkl")
+    return joblib.load("lgb_model_fit_june7.pkl")
 
 def calculate_fibonacci_levels(df):
     fib_ratios = [0.382, 0.5, 0.618, 1.5, 1.618]

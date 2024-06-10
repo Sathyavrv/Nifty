@@ -119,12 +119,6 @@ else:
     df = calculate_fibonacci_levels(df)
     df = calculate_column_differences(df)
 
-    
-    df['Volume_Difference'] = df.apply(calculate_volume_difference, axis=1)
-    df['Volume_Percentage_Change'] = df.apply(calculate_percentage_change, axis=1)
-    df['Volume_Ratio'] = df.apply(calculate_volume_ratio, axis=1)
-    df['Volume_Sum'] = df.apply(calculate_volume_sum, axis=1)
-    df['High_Low_Difference'] = df.apply(calculate_high_low_difference, axis=1)
 
     # Create a single row DataFrame for model prediction
     data = {

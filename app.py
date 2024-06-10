@@ -120,8 +120,8 @@ else:
     df = calculate_column_differences(df)
 
     # Calculate differences for new columns
-    base_columns = ['open', 'day_open']
-    columns_to_diff = ['open', 'day_open', 'Current_High', 'Current_Low', 'High_1', 'Low_1', 'Volume_1',
+    base_columns = ['open_val', 'day_open']
+    columns_to_diff = ['open_val', 'day_open', 'Current_High', 'Current_Low', 'High_1', 'Low_1', 'Volume_1',
                        'High_2', 'Low_2', 'Volume_2', 'Diff_Current_High_High_1', 'Diff_Current_High_High_2',
                        'Diff_Current_Low_Low_1', 'Diff_Current_Low_Low_2', 'Diff_High_1_High_2', 'Diff_Low_1_Low_2'] + \
                       [f'Fib_{ratio}_High_1_Low_1' for ratio in [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]] + \

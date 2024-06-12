@@ -365,8 +365,8 @@ else:
     # Load the model
     model = load_model()
 
-    prediction = model.predict(input_data)
-    prediction_proba = model.predict_proba(input_data)
+    prediction = model.predict(data_df)
+    prediction_proba = model.predict_proba(data_df)
 
     st.subheader("Model Prediction")
     st.write("Prediction:", prediction[0])

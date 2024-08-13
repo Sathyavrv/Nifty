@@ -8,7 +8,7 @@ import joblib
 import lightgbm
 
 # Override yfinance with pandas_datareader
-yf.pdr_override()
+#yf.pdr_override()
 
 # Function to get the latest two working days from Yahoo Finance
 def get_recent_data(ticker, selected_date):

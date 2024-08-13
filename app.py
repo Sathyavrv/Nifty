@@ -19,24 +19,13 @@ def get_recent_data(ticker, selected_date):
 
 # Function to calculate KPIs
 def calculate_kpis(df):
-    # Calculate daily percentage change
-    df['Daily_Change'] = df['Close'].pct_change() * 100
-    # Calculate weekly and monthly rolling means
-    df['Weekly_Movement'] = df['Close'].rolling(window=5).mean()
-    df['Monthly_Movement'] = df['Close'].rolling(window=21).mean()
-
-    kpis = {
-        'Last_Close': df['Close'].iloc[-1],
-        'Past_Week_Change': df['Close'].pct_change(periods=5).iloc[-1] * 100,
-        'Past_Month_Change': df['Close'].pct_change(periods=21).iloc[-1] * 100,
-        'Avg_Weekly_Movement': df['Weekly_Movement'].iloc[-1],
-        'Avg_Monthly_Movement': df['Monthly_Movement'].iloc[-1],
-        'Daily_Volatility': df['Daily_Change'].std(),
-        'Weekly_Volatility': df['Weekly_Movement'].std(),
-        'Monthly_Volatility': df['Monthly_Movement'].std(),
-    }
-    
-    return kpis
+    last_close = df['Close'].iloc[-1]
+    past_week_change = ((df['Close'].iloc[-1] - df['Close'].iloc[-6]) / df['Close'].iloc[-6]) * 100
+    past_month_change = ((df['Close'].iloc[-1] - df['Close'].iloc[0]) / df['Close'].iloc[0]) * 100
+    avg_weekly_movement = df['Close'].rolling(window=5).mean().iloc[-1]
+    avg_monthly_movement = df['Close'].mean()
+    avg_daily_volume = df['Volume'].mean()
+    return last_close, past_week_change, past_month_change, avg_weekly_movement, avg_monthly_movement, avg_daily_volume
 
 # Load your pre-trained model
 def load_model():
@@ -127,26 +116,52 @@ recent_data = get_recent_data(ticker, selected_date)
 if len(recent_data) < 2:
     st.error("Insufficient data from Yahoo Finance. Please try again later.")
 else:
+# Calculate KPIs
+    last_close, past_week_change, past_month_change, avg_weekly_movement, avg_monthly_movement, avg_daily_volume = calculate_kpis(month_data)
 
-    # Calculate KPIs
-    kpis = calculate_kpis(recent_data)
+    # Display KPIs in a visually appealing way
+    st.markdown("### Key Performance Indicators (KPIs)")
+    kpi1, kpi2, kpi3 = st.columns(3)
+    kpi4, kpi5, kpi6 = st.columns(3)
 
-    # Display KPIs
-    st.subheader("Key Performance Indicators (KPIs)")
-    col1, col2, col3, col4, col5 = st.columns(5)
-    col1.metric(label="Last Close", value=f"${kpis['Last_Close']:.2f}")
-    col2.metric(label="Past Week % Change", value=f"{kpis['Past_Week_Change']:.2f}%")
-    col3.metric(label="Past Month % Change", value=f"{kpis['Past_Month_Change']:.2f}%")
-    col4.metric(label="Avg Weekly Movement", value=f"${kpis['Avg_Weekly_Movement']:.2f}")
-    col5.metric(label="Avg Monthly Movement", value=f"${kpis['Avg_Monthly_Movement']:.2f}")
+    with kpi1:
+        st.metric(label="Last Close", value=f"${last_close:,.2f}")
+    with kpi2:
+        st.metric(label="Past Week % Change", value=f"{past_week_change:.2f}%")
+    with kpi3:
+        st.metric(label="Past Month % Change", value=f"{past_month_change:.2f}%")
+    with kpi4:
+        st.metric(label="Avg Weekly Movement", value=f"${avg_weekly_movement:,.2f}")
+    with kpi5:
+        st.metric(label="Avg Monthly Movement", value=f"${avg_monthly_movement:,.2f}")
+    with kpi6:
+        st.metric(label="Avg Daily Volume", value=f"{avg_daily_volume:,.0f}")
 
-    st.subheader("Volatility Indicators")
-    col6, col7, col8 = st.columns(3)
-    col6.metric(label="Daily Volatility", value=f"{kpis['Daily_Volatility']:.2f}%")
-    col7.metric(label="Weekly Volatility", value=f"{kpis['Weekly_Volatility']:.2f}")
-    col8.metric(label="Monthly Volatility", value=f"{kpis['Monthly_Volatility']:.2f}")
+    # Create a plotly line chart for past month data
+    st.markdown("### Past Month Closing Prices and Volume")
+    fig = go.Figure()
 
-    st.markdown("---")
+    fig.add_trace(go.Scatter(x=month_data.index, y=month_data['Close'], mode='lines', name='Close Price'))
+    fig.add_trace(go.Bar(x=month_data.index, y=month_data['Volume'], name='Volume', yaxis='y2', opacity=0.3))
+
+    fig.update_layout(
+        title="Closing Prices and Volume Over the Last Month",
+        xaxis_title="Date",
+        yaxis=dict(title="Price ($)"),
+        yaxis2=dict(title="Volume", overlaying='y', side='right', showgrid=False),
+        legend=dict(x=0, y=1.0, bgcolor='rgba(255, 255, 255, 0)')
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    # Create a plotly pie chart for weekly vs. monthly changes
+    st.markdown("### Performance Comparison")
+    fig2 = go.Figure(go.Pie(labels=["Past Week % Change", "Past Month % Change"],
+                            values=[past_week_change, past_month_change],
+                            textinfo='label+percent',
+                            hole=.3))
+    fig2.update_layout(title="Weekly vs. Monthly Performance")
+    st.plotly_chart(fig2, use_container_width=True)
     
     # Calculate necessary fields from recent data
     high_1 = recent_data.iloc[-1]['High']

@@ -13,7 +13,7 @@ import lightgbm
 # Function to get the latest two working days from Yahoo Finance
 def get_recent_data(ticker, selected_date):
     end_date = selected_date.strftime('%Y-%m-%d')
-    start_date = (selected_date - pd.DateOffset(days=5)).strftime('%Y-%m-%d')
+    start_date = (selected_date - pd.DateOffset(days=35)).strftime('%Y-%m-%d')
     df = yf.download(ticker, start=start_date, end=end_date)
     return df.tail(2)
 

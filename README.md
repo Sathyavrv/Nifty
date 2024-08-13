@@ -35,8 +35,8 @@ To run this project locally, follow these steps:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/sathyavrv/nifty50-prediction.git
-cd nifty50-prediction
+git clone https://github.com/Sathyavrv/Nifty.git
+cd Nifty
 ```
 
 ### 2. Install the Required Dependencies

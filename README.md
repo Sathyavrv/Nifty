@@ -39,26 +39,26 @@ git clone https://github.com/sathyavrv/nifty50-prediction.git
 cd nifty50-prediction
 ```
 
-###2. Install the Required Dependencies
+### 2. Install the Required Dependencies
 Make sure you have Python 3.10+ installed. Install the required libraries using:
 ```bash
 pip install -r requirements.txt
 ```
 
-###3. Run the Streamlit App Locally
+### 3. Run the Streamlit App Locally
 ```bash
 streamlit run app.py
 ```
 
 This will start a local server and open the app in your default web browser.
 
-###4. Accessing the Model
+### 4. Accessing the Model
 The pre-trained LightGBM model is included in the repository as lgb_model_june11.pkl. The app loads this model to make predictions based on the user inputs.
 
-##About the Project
+## About the Project
 This project demonstrates advanced data processing and machine learning techniques, showcasing my expertise in financial data modeling. The integration of real-time data, advanced feature engineering, and a robust prediction model into a user-friendly web application exemplifies the ability to create practical solutions with real-world impact.
 
 The codebase is well-documented and structured, ensuring that any employer or collaborator who reviews this repository can quickly understand the methodologies used and the capabilities demonstrated.
 
-##Contribution
+## Contribution
 Contributions to this project are welcome! Feel free to fork the repository, make enhancements, or suggest new features. Please open an issue to discuss any significant changes.

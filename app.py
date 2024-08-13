@@ -6,7 +6,6 @@ from pandas_datareader import data as pdr
 from datetime import datetime
 import joblib
 import lightgbm
-import plotly.graph_objs as go
 
 # Override yfinance with pandas_datareader
 #yf.pdr_override()
@@ -137,32 +136,6 @@ else:
         st.metric(label="Avg Monthly Movement", value=f"${avg_monthly_movement:,.2f}")
     with kpi6:
         st.metric(label="Avg Daily Volume", value=f"{avg_daily_volume:,.0f}")
-
-    # Create a plotly line chart for past month data
-    st.markdown("### Past Month Closing Prices and Volume")
-    fig = go.Figure()
-
-    fig.add_trace(go.Scatter(x=recent_data.index, y=recent_data['Close'], mode='lines', name='Close Price'))
-    fig.add_trace(go.Bar(x=recent_data.index, y=recent_data['Volume'], name='Volume', yaxis='y2', opacity=0.3))
-
-    fig.update_layout(
-        title="Closing Prices and Volume Over the Last Month",
-        xaxis_title="Date",
-        yaxis=dict(title="Price ($)"),
-        yaxis2=dict(title="Volume", overlaying='y', side='right', showgrid=False),
-        legend=dict(x=0, y=1.0, bgcolor='rgba(255, 255, 255, 0)')
-    )
-
-    st.plotly_chart(fig, use_container_width=True)
-
-    # Create a plotly pie chart for weekly vs. monthly changes
-    st.markdown("### Performance Comparison")
-    fig2 = go.Figure(go.Pie(labels=["Past Week % Change", "Past Month % Change"],
-                            values=[past_week_change, past_month_change],
-                            textinfo='label+percent',
-                            hole=.3))
-    fig2.update_layout(title="Weekly vs. Monthly Performance")
-    st.plotly_chart(fig2, use_container_width=True)
     
     # Calculate necessary fields from recent data
     high_1 = recent_data.iloc[-1]['High']

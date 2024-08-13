@@ -117,7 +117,7 @@ if len(recent_data) < 2:
     st.error("Insufficient data from Yahoo Finance. Please try again later.")
 else:
 # Calculate KPIs
-    last_close, past_week_change, past_month_change, avg_weekly_movement, avg_monthly_movement, avg_daily_volume = calculate_kpis(month_data)
+    last_close, past_week_change, past_month_change, avg_weekly_movement, avg_monthly_movement, avg_daily_volume = calculate_kpis(recent_data)
 
     # Display KPIs in a visually appealing way
     st.markdown("### Key Performance Indicators (KPIs)")
@@ -141,8 +141,8 @@ else:
     st.markdown("### Past Month Closing Prices and Volume")
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=month_data.index, y=month_data['Close'], mode='lines', name='Close Price'))
-    fig.add_trace(go.Bar(x=month_data.index, y=month_data['Volume'], name='Volume', yaxis='y2', opacity=0.3))
+    fig.add_trace(go.Scatter(x=recent_data.index, y=recent_data['Close'], mode='lines', name='Close Price'))
+    fig.add_trace(go.Bar(x=recent_data.index, y=recent_data['Volume'], name='Volume', yaxis='y2', opacity=0.3))
 
     fig.update_layout(
         title="Closing Prices and Volume Over the Last Month",

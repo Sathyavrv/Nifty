@@ -118,7 +118,7 @@ if len(recent_data) < 2:
     st.error("Insufficient data from Yahoo Finance. Please try again later.")
 else:
     # Calculate KPIs
-    last_close, past_week_change, past_month_change, avg_weekly_movement, avg_monthly_movement, diff_avg_movement, avg_daily_volume = calculate_kpis(month_data)
+    last_close, past_week_change, past_month_change, avg_weekly_movement, avg_monthly_movement, diff_avg_movement, avg_daily_volume = calculate_kpis(recent_data)
 
     # Display KPIs in a visually appealing way
     st.markdown("### Key Performance Indicators (KPIs)")

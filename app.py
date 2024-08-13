@@ -24,8 +24,9 @@ def calculate_kpis(df):
     past_month_change = ((df['Close'].iloc[-1] - df['Close'].iloc[0]) / df['Close'].iloc[0]) * 100
     avg_weekly_movement = df['Close'].rolling(window=5).mean().iloc[-1]
     avg_monthly_movement = df['Close'].mean()
+    diff_avg_movement = avg_weekly_movement - avg_monthly_movement
     avg_daily_volume = df['Volume'].mean()
-    return last_close, past_week_change, past_month_change, avg_weekly_movement, avg_monthly_movement, avg_daily_volume
+    return last_close, past_week_change, past_month_change, avg_weekly_movement, avg_monthly_movement, diff_avg_movement, avg_daily_volume
 
 # Load your pre-trained model
 def load_model():
@@ -116,25 +117,28 @@ recent_data = get_recent_data(ticker, selected_date)
 if len(recent_data) < 2:
     st.error("Insufficient data from Yahoo Finance. Please try again later.")
 else:
-# Calculate KPIs
-    last_close, past_week_change, past_month_change, avg_weekly_movement, avg_monthly_movement, avg_daily_volume = calculate_kpis(recent_data)
+    # Calculate KPIs
+    last_close, past_week_change, past_month_change, avg_weekly_movement, avg_monthly_movement, diff_avg_movement, avg_daily_volume = calculate_kpis(month_data)
 
     # Display KPIs in a visually appealing way
     st.markdown("### Key Performance Indicators (KPIs)")
     kpi1, kpi2, kpi3 = st.columns(3)
     kpi4, kpi5, kpi6 = st.columns(3)
+    kpi7, _, _ = st.columns(3)  # Create a new column for the Avg Daily Volume
 
     with kpi1:
-        st.metric(label="Last Close", value=f"${last_close:,.2f}")
+        st.metric(label="Last Close", value=f"₹{last_close:,.2f}")
     with kpi2:
         st.metric(label="Past Week % Change", value=f"{past_week_change:.2f}%")
     with kpi3:
         st.metric(label="Past Month % Change", value=f"{past_month_change:.2f}%")
     with kpi4:
-        st.metric(label="Avg Weekly Movement", value=f"${avg_weekly_movement:,.2f}")
+        st.metric(label="Avg Weekly Movement", value=f"₹{avg_weekly_movement:,.2f}")
     with kpi5:
-        st.metric(label="Avg Monthly Movement", value=f"${avg_monthly_movement:,.2f}")
+        st.metric(label="Avg Monthly Movement", value=f"₹{avg_monthly_movement:,.2f}")
     with kpi6:
+        st.metric(label="Difference in Avg Movements", value=f"₹{diff_avg_movement:,.2f}")
+    with kpi7:
         st.metric(label="Avg Daily Volume", value=f"{avg_daily_volume:,.0f}")
     
     # Calculate necessary fields from recent data

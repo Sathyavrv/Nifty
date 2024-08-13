@@ -14,7 +14,7 @@ import lightgbm
 def get_recent_data(ticker, selected_date):
     end_date = selected_date.strftime('%Y-%m-%d')
     start_date = (selected_date - pd.DateOffset(days=5)).strftime('%Y-%m-%d')
-    df = pdr.get_data_yahoo(ticker, start=start_date, end=end_date)
+    df = yf.download(ticker, start=start_date, end=end_date)
     return df.tail(2)
 
 # Load your pre-trained model

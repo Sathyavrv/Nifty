@@ -20,12 +20,26 @@ def get_recent_data(ticker, selected_date):
 # Function to calculate KPIs
 def calculate_kpis(df):
     last_close = df['Close'].iloc[-1]
+    
+    # Calculate past week and month changes
     past_week_change = ((df['Close'].iloc[-1] - df['Close'].iloc[-6]) / df['Close'].iloc[-6]) * 100
     past_month_change = ((df['Close'].iloc[-1] - df['Close'].iloc[0]) / df['Close'].iloc[0]) * 100
-    avg_weekly_movement = df['Close'].rolling(window=5).mean().iloc[-1]
+    
+    # Calculate average weekly movement for each week in the past month
+    weekly_movements = []
+    for i in range(0, len(df) - 5, 5):
+        weekly_avg = df['Close'].iloc[i:i+5].mean()
+        weekly_movements.append(weekly_avg)
+    
+    avg_weekly_movement = sum(weekly_movements) / len(weekly_movements)
     avg_monthly_movement = df['Close'].mean()
+    
+    # Calculate the difference between the average weekly and monthly movements
     diff_avg_movement = avg_weekly_movement - avg_monthly_movement
+    
+    # Calculate the average daily volume over the month
     avg_daily_volume = df['Volume'].mean()
+    
     return last_close, past_week_change, past_month_change, avg_weekly_movement, avg_monthly_movement, diff_avg_movement, avg_daily_volume
 
 # Load your pre-trained model

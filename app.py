@@ -17,6 +17,27 @@ def get_recent_data(ticker, selected_date):
     df = yf.download(ticker, start=start_date, end=end_date)
     return df.tail(2)
 
+# Function to calculate KPIs
+def calculate_kpis(df):
+    # Calculate daily percentage change
+    df['Daily_Change'] = df['Close'].pct_change() * 100
+    # Calculate weekly and monthly rolling means
+    df['Weekly_Movement'] = df['Close'].rolling(window=5).mean()
+    df['Monthly_Movement'] = df['Close'].rolling(window=21).mean()
+
+    kpis = {
+        'Last_Close': df['Close'].iloc[-1],
+        'Past_Week_Change': df['Close'].pct_change(periods=5).iloc[-1] * 100,
+        'Past_Month_Change': df['Close'].pct_change(periods=21).iloc[-1] * 100,
+        'Avg_Weekly_Movement': df['Weekly_Movement'].iloc[-1],
+        'Avg_Monthly_Movement': df['Monthly_Movement'].iloc[-1],
+        'Daily_Volatility': df['Daily_Change'].std(),
+        'Weekly_Volatility': df['Weekly_Movement'].std(),
+        'Monthly_Volatility': df['Monthly_Movement'].std(),
+    }
+    
+    return kpis
+
 # Load your pre-trained model
 def load_model():
     return joblib.load("lgb_model_june11.pkl")
@@ -106,6 +127,27 @@ recent_data = get_recent_data(ticker, selected_date)
 if len(recent_data) < 2:
     st.error("Insufficient data from Yahoo Finance. Please try again later.")
 else:
+
+    # Calculate KPIs
+    kpis = calculate_kpis(recent_data)
+
+    # Display KPIs
+    st.subheader("Key Performance Indicators (KPIs)")
+    col1, col2, col3, col4, col5 = st.columns(5)
+    col1.metric(label="Last Close", value=f"${kpis['Last_Close']:.2f}")
+    col2.metric(label="Past Week % Change", value=f"{kpis['Past_Week_Change']:.2f}%")
+    col3.metric(label="Past Month % Change", value=f"{kpis['Past_Month_Change']:.2f}%")
+    col4.metric(label="Avg Weekly Movement", value=f"${kpis['Avg_Weekly_Movement']:.2f}")
+    col5.metric(label="Avg Monthly Movement", value=f"${kpis['Avg_Monthly_Movement']:.2f}")
+
+    st.subheader("Volatility Indicators")
+    col6, col7, col8 = st.columns(3)
+    col6.metric(label="Daily Volatility", value=f"{kpis['Daily_Volatility']:.2f}%")
+    col7.metric(label="Weekly Volatility", value=f"{kpis['Weekly_Volatility']:.2f}")
+    col8.metric(label="Monthly Volatility", value=f"{kpis['Monthly_Volatility']:.2f}")
+
+    st.markdown("---")
+    
     # Calculate necessary fields from recent data
     high_1 = recent_data.iloc[-1]['High']
     low_1 = recent_data.iloc[-1]['Low']

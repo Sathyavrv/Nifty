@@ -6,4 +6,3 @@ pandas_datareader
 joblib
 datetime
 lightgbm
-plotly

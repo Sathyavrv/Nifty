@@ -6,6 +6,7 @@ from pandas_datareader import data as pdr
 from datetime import datetime
 import joblib
 import lightgbm
+import plotly.graph_objs as go
 
 # Override yfinance with pandas_datareader
 #yf.pdr_override()

@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import yfinance as yf
-from pandas_datareader import data as pdr
 from datetime import datetime
 import joblib
 
@@ -17,6 +16,35 @@ def calculate_vwap(row):
     if row['Volume'] == 0 or pd.isna(row['Volume']):
         return 0
     return row['Close']  # Simplified VWAP calculation for the example
+
+# Function to calculate Fibonacci levels
+def calculate_fibonacci_levels(df):
+    fib_ratios = [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]
+    high_low_combinations = [
+        ('High_1', 'Low_1'), ('High_1', 'Low_2'), ('High_2', 'Low_1'), ('High_2', 'Low_2'),
+        ('Low_1', 'High_1'), ('Low_1', 'High_2'), ('Low_2', 'High_1'), ('Low_2', 'High_2'),
+        ('Current_High', 'Current_Low'), ('Current_Low', 'Current_High')
+    ]
+
+    for high, low in high_low_combinations:
+        for ratio in fib_ratios:
+            df[f'Fib_{ratio}_{high}_{low}'] = df[high] - (df[high] - df[low]) * ratio
+
+    return df
+
+# Function to calculate differences between all specified columns
+def calculate_all_differences(df, base_columns, diff_columns):
+    new_cols = {}
+
+    for base_col in base_columns:
+        for col in diff_columns:
+            if base_col != col:
+                new_cols[f'Diff_{base_col}_{col}'] = df[base_col] - df[col]
+
+    # Concatenate all new columns at once to avoid DataFrame fragmentation
+    df = pd.concat([df, pd.DataFrame(new_cols)], axis=1)
+
+    return df
 
 # Load your pre-trained model
 def load_model():
@@ -79,13 +107,9 @@ else:
         'High_1': [high_1], 'Low_1': [low_1], 'High_2': [high_2], 'Low_2': [low_2],
         'Current_High': [current_high], 'Current_Low': [current_low]
     })
-    for high, low in [('High_1', 'Low_1'), ('High_1', 'Low_2'), ('High_2', 'Low_1'), ('High_2', 'Low_2'),
-                      ('Low_1', 'High_1'), ('Low_1', 'High_2'), ('Low_2', 'High_1'), ('Low_2', 'High_2'),
-                      ('Current_High', 'Current_Low'), ('Current_Low', 'Current_High')]:
-        for ratio in fib_ratios:
-            df[f'Fib_{ratio}_{high}_{low}'] = df[high] - (df[high] - df[low]) * ratio
 
-    # Calculate differences
+    # Apply the functions
+    df = calculate_fibonacci_levels(df)
     column_pairs = [('Current_High', 'High_1'), ('Current_High', 'High_2'), ('Current_Low', 'Low_1'),
                     ('Current_Low', 'Low_2'), ('High_1', 'High_2'), ('Low_1', 'Low_2')]
     for col1, col2 in column_pairs:

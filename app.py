@@ -1,8 +1,10 @@
 import streamlit as st
 import pandas as pd
 import yfinance as yf
+from pandas_datareader import data as pdr
 from datetime import datetime
 import joblib
+import lightgbm
 
 # Function to get the latest two working days from Yahoo Finance
 def get_recent_data(ticker, selected_date):
@@ -11,13 +13,35 @@ def get_recent_data(ticker, selected_date):
     df = yf.download(ticker, start=start_date, end=end_date)
     return df
 
-# Function to calculate VWAP
-def calculate_vwap(row):
-    if row['Volume'] == 0 or pd.isna(row['Volume']):
-        return 0
-    return row['Close']  # Simplified VWAP calculation for the example
+# Function to calculate KPIs
+def calculate_kpis(df):
+    last_close = df['Close'].iloc[-1]
+    
+    # Calculate past week and month changes
+    past_week_change = ((df['Close'].iloc[-1] - df['Close'].iloc[-6]) / df['Close'].iloc[-6]) * 100
+    past_month_change = ((df['Close'].iloc[-1] - df['Close'].iloc[0]) / df['Close'].iloc[0]) * 100
+    
+    # Calculate average weekly movement for each week in the past month
+    weekly_movements = []
+    for i in range(0, len(df) - 5, 5):
+        weekly_avg = df['Close'].iloc[i:i+5].mean()
+        weekly_movements.append(weekly_avg)
+    
+    avg_weekly_movement = sum(weekly_movements) / len(weekly_movements)
+    avg_monthly_movement = df['Close'].mean()
+    
+    # Calculate the difference between the average weekly and monthly movements
+    diff_avg_movement = avg_weekly_movement - avg_monthly_movement
+    
+    # Calculate the average daily volume over the month
+    avg_daily_volume = df['Volume'].mean()
+    
+    return last_close, past_week_change, past_month_change, avg_weekly_movement, avg_monthly_movement, diff_avg_movement, avg_daily_volume
 
-# Function to calculate Fibonacci levels
+# Load your pre-trained model
+def load_model():
+    return joblib.load("lgb_model_aug18.pkl")
+
 def calculate_fibonacci_levels(df):
     fib_ratios = [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]
     high_low_combinations = [
@@ -32,23 +56,45 @@ def calculate_fibonacci_levels(df):
 
     return df
 
-# Function to calculate differences between all specified columns
+def calculate_column_differences(df):
+    column_pairs = [
+        ('Current_High', 'High_1'), ('Current_High', 'High_2'),
+        ('Current_Low', 'Low_1'), ('Current_Low', 'Low_2'),
+        ('High_1', 'High_2'), ('Low_1', 'Low_2')
+    ]
+    for col1, col2 in column_pairs:
+        diff_col_name = f'Diff_{col1}_{col2}'
+        df[diff_col_name] = df[col1] - df[col2]
+
+    return df
+
 def calculate_all_differences(df, base_columns, diff_columns):
     new_cols = {}
-
     for base_col in base_columns:
         for col in diff_columns:
             if base_col != col:
                 new_cols[f'Diff_{base_col}_{col}'] = df[base_col] - df[col]
-
-    # Concatenate all new columns at once to avoid DataFrame fragmentation
     df = pd.concat([df, pd.DataFrame(new_cols)], axis=1)
-
     return df
 
-# Load your pre-trained model
-def load_model():
-    return joblib.load("lgb_model_aug18.pkl")
+def calculate_volume_difference(row):
+    return row['Volume_1'] - row['Volume_2']
+
+def calculate_percentage_change(row):
+    if row['Volume_2'] == 0:
+        return 0
+    return ((row['Volume_1'] - row['Volume_2']) / row['Volume_2']) * 100
+
+def calculate_volume_ratio(row):
+    if row['Volume_2'] == 0:
+        return 0
+    return row['Volume_1'] / row['Volume_2']
+
+def calculate_volume_sum(row):
+    return row['Volume_1'] + row['Volume_2']
+
+def calculate_high_low_difference(row):
+    return row['Current_High'] - row['Current_Low']
 
 # UI Setup
 st.set_page_config(page_title="Stock Prediction", page_icon="📈", layout="centered")
@@ -68,7 +114,7 @@ month = st.sidebar.selectbox('Month', list(range(1, 13)), index=current_time.mon
 day = st.sidebar.selectbox('Day', list(range(1, 32)), index=current_time.day - 1)
 year = st.sidebar.selectbox('Year', list(range(2000, current_time.year + 1)), index=current_time.year - 2000)
 hour = st.sidebar.selectbox('Hour', list(range(24)), index=current_time.hour)
-minute = st.sidebar.number_input('Minute', value=20)
+minute = st.sidebar.number_input('minute', value=20)
 
 # Construct the selected datetime
 selected_date = datetime(year, month, day, hour, minute)
@@ -81,10 +127,53 @@ recent_data = get_recent_data(ticker, selected_date)
 if len(recent_data) < 2:
     st.error("Insufficient data from Yahoo Finance. Please try again later.")
 else:
+    # Calculate KPIs
+    last_close, past_week_change, past_month_change, avg_weekly_movement, avg_monthly_movement, diff_avg_movement, avg_daily_volume = calculate_kpis(recent_data)
+
+    # Display KPIs in a visually appealing way
+    st.markdown("### Key Performance Indicators (KPIs)")
+    kpi1, kpi2, kpi3 = st.columns(3)
+    kpi4, kpi5, kpi6 = st.columns(3)
+    kpi7, _, _ = st.columns(3)  # Create a new column for the Avg Daily Volume
+
+    with kpi1:
+        st.metric(label="Last Close", value=f"₹{last_close:,.2f}")
+    with kpi2:
+        st.metric(label="Past Week % Change", value=f"{past_week_change:.2f}%")
+    with kpi3:
+        st.metric(label="Past Month % Change", value=f"{past_month_change:.2f}%")
+    with kpi4:
+        st.metric(label="Avg Weekly Movement", value=f"₹{avg_weekly_movement:,.2f}")
+    with kpi5:
+        st.metric(label="Avg Monthly Movement", value=f"₹{avg_monthly_movement:,.2f}")
+    with kpi6:
+        st.metric(label="Difference in Avg Movements", value=f"₹{diff_avg_movement:,.2f}")
+    with kpi7:
+        st.metric(label="Avg Daily Volume", value=f"{avg_daily_volume:,.0f}")
+    
+    # Calculate necessary fields from recent data
+    high_1 = recent_data.iloc[-1]['High']
+    low_1 = recent_data.iloc[-1]['Low']
+    high_2 = recent_data.iloc[-2]['High']
+    low_2 = recent_data.iloc[-2]['Low']
+    volume_2 = recent_data.iloc[-2]['Volume']
+
+    df = pd.DataFrame({
+        'High_1': [high_1], 'Low_1': [low_1], 'High_2': [high_2], 'Low_2': [low_2],
+        'Current_High': [current_high], 'Current_Low': [current_low]
+    })
+    df = calculate_fibonacci_levels(df)
+    df = calculate_column_differences(df)
+
     # Replace the last value in the recent_data Volume column with the manual input
     recent_data['Volume'].iloc[-1] = volume_1
 
     # Calculate VWAP
+    def calculate_vwap(row):
+        if row['Volume'] == 0 or pd.isna(row['Volume']):
+            return 0  # or you could return np.nan or any other value that suits your needs
+        return row['Close']  # If Volume_1 is not zero or NaN, this will return the close price as VWAP
+    
     recent_data['VWAP'] = recent_data.apply(calculate_vwap, axis=1)
 
     # Calculate moving averages with windows adjusted to trading days
@@ -94,28 +183,7 @@ else:
     recent_data['5D_Volume_MA'] = recent_data['Volume'].rolling(window=5, min_periods=1).mean().fillna(0)
     recent_data['7D_Volume_MA'] = recent_data['Volume'].rolling(window=7, min_periods=1).mean().fillna(0)
     
-    # Extract necessary fields from recent data
-    high_1 = recent_data.iloc[-1]['High']
-    low_1 = recent_data.iloc[-1]['Low']
-    high_2 = recent_data.iloc[-2]['High']
-    low_2 = recent_data.iloc[-2]['Low']
-    volume_2 = recent_data.iloc[-2]['Volume']
-
-    # Calculate Fibonacci levels and differences
-    fib_ratios = [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]
-    df = pd.DataFrame({
-        'High_1': [high_1], 'Low_1': [low_1], 'High_2': [high_2], 'Low_2': [low_2],
-        'Current_High': [current_high], 'Current_Low': [current_low]
-    })
-
-    # Apply the functions
-    df = calculate_fibonacci_levels(df)
-    column_pairs = [('Current_High', 'High_1'), ('Current_High', 'High_2'), ('Current_Low', 'Low_1'),
-                    ('Current_Low', 'Low_2'), ('High_1', 'High_2'), ('Low_1', 'Low_2')]
-    for col1, col2 in column_pairs:
-        df[f'Diff_{col1}_{col2}'] = df[col1] - df[col2]
-
-    # Ensure all features are included in the correct order
+    # Create a single row DataFrame for model prediction
     data = {
         'open': open_val,
         'Month': month,
@@ -130,42 +198,99 @@ else:
         'High_2': high_2,
         'Low_2': low_2,
         'Volume_2': volume_2,
+        'Diff_Current_High_High_1': current_high - high_1,
+        'Diff_Current_High_High_2': current_high - high_2,
+        'Diff_Current_Low_Low_1': current_low - low_1,
+        'Diff_Current_Low_Low_2': current_low - low_2,
+        'Diff_High_1_High_2': high_1 - high_2,
+        'Diff_Low_1_Low_2': low_1 - low_2,
+        'Fib_0.382_High_1_Low_1': df.loc[0, 'Fib_0.382_High_1_Low_1'],
+        'Fib_0.5_High_1_Low_1': df.loc[0, 'Fib_0.5_High_1_Low_1'],
+        'Fib_0.618_High_1_Low_1': df.loc[0, 'Fib_0.618_High_1_Low_1'],
+        'Fib_0.786_High_1_Low_1': df.loc[0, 'Fib_0.786_High_1_Low_1'],
+        'Fib_1.5_High_1_Low_1': df.loc[0, 'Fib_1.5_High_1_Low_1'],
+        'Fib_1.618_High_1_Low_1': df.loc[0, 'Fib_1.618_High_1_Low_1'],
+        'Fib_0.382_High_1_Low_2': df.loc[0, 'Fib_0.382_High_1_Low_2'],
+        'Fib_0.5_High_1_Low_2': df.loc[0, 'Fib_0.5_High_1_Low_2'],
+        'Fib_0.618_High_1_Low_2': df.loc[0, 'Fib_0.618_High_1_Low_2'],
+        'Fib_0.786_High_1_Low_2': df.loc[0, 'Fib_0.786_High_1_Low_2'],
+        'Fib_1.5_High_1_Low_2': df.loc[0, 'Fib_1.5_High_1_Low_2'],
+        'Fib_1.618_High_1_Low_2': df.loc[0, 'Fib_1.618_High_1_Low_2'],
+        'Fib_0.382_High_2_Low_1': df.loc[0, 'Fib_0.382_High_2_Low_1'],
+        'Fib_0.5_High_2_Low_1': df.loc[0, 'Fib_0.5_High_2_Low_1'],
+        'Fib_0.618_High_2_Low_1': df.loc[0, 'Fib_0.618_High_2_Low_1'],
+        'Fib_0.786_High_2_Low_1': df.loc[0, 'Fib_0.786_High_2_Low_1'],
+        'Fib_1.5_High_2_Low_1': df.loc[0, 'Fib_1.5_High_2_Low_1'],
+        'Fib_1.618_High_2_Low_1': df.loc[0, 'Fib_1.618_High_2_Low_1'],
+        'Fib_0.382_High_2_Low_2': df.loc[0, 'Fib_0.382_High_2_Low_2'],
+        'Fib_0.5_High_2_Low_2': df.loc[0, 'Fib_0.5_High_2_Low_2'],
+        'Fib_0.618_High_2_Low_2': df.loc[0, 'Fib_0.618_High_2_Low_2'],
+        'Fib_0.786_High_2_Low_2': df.loc[0, 'Fib_0.786_High_2_Low_2'],
+        'Fib_1.5_High_2_Low_2': df.loc[0, 'Fib_1.5_High_2_Low_2'],
+        'Fib_1.618_High_2_Low_2': df.loc[0, 'Fib_1.618_High_2_Low_2'],
+        'Fib_0.382_Low_1_High_1': df.loc[0, 'Fib_0.382_Low_1_High_1'],
+        'Fib_0.5_Low_1_High_1': df.loc[0, 'Fib_0.5_Low_1_High_1'],
+        'Fib_0.618_Low_1_High_1': df.loc[0, 'Fib_0.618_Low_1_High_1'],
+        'Fib_0.786_Low_1_High_1': df.loc[0, 'Fib_0.786_Low_1_High_1'],
+        'Fib_1.5_Low_1_High_1': df.loc[0, 'Fib_1.5_Low_1_High_1'],
+        'Fib_1.618_Low_1_High_1': df.loc[0, 'Fib_1.618_Low_1_High_1'],
+        'Fib_0.382_Low_1_High_2': df.loc[0, 'Fib_0.382_Low_1_High_2'],
+        'Fib_0.5_Low_1_High_2': df.loc[0, 'Fib_0.5_Low_1_High_2'],
+        'Fib_0.618_Low_1_High_2': df.loc[0, 'Fib_0.618_Low_1_High_2'],
+        'Fib_0.786_Low_1_High_2': df.loc[0, 'Fib_0.786_Low_1_High_2'],
+        'Fib_1.5_Low_1_High_2': df.loc[0, 'Fib_1.5_Low_1_High_2'],
+        'Fib_1.618_Low_1_High_2': df.loc[0, 'Fib_1.618_Low_1_High_2'],
+        'Fib_0.382_Low_2_High_1': df.loc[0, 'Fib_0.382_Low_2_High_1'],
+        'Fib_0.5_Low_2_High_1': df.loc[0, 'Fib_0.5_Low_2_High_1'],
+        'Fib_0.618_Low_2_High_1': df.loc[0, 'Fib_0.618_Low_2_High_1'],
+        'Fib_0.786_Low_2_High_1': df.loc[0, 'Fib_0.786_Low_2_High_1'],
+        'Fib_1.5_Low_2_High_1': df.loc[0, 'Fib_1.5_Low_2_High_1'],
+        'Fib_1.618_Low_2_High_1': df.loc[0, 'Fib_1.618_Low_2_High_1'],
+        'Fib_0.382_Low_2_High_2': df.loc[0, 'Fib_0.382_Low_2_High_2'],
+        'Fib_0.5_Low_2_High_2': df.loc[0, 'Fib_0.5_Low_2_High_2'],
+        'Fib_0.618_Low_2_High_2': df.loc[0, 'Fib_0.618_Low_2_High_2'],
+        'Fib_0.786_Low_2_High_2': df.loc[0, 'Fib_0.786_Low_2_High_2'],
+        'Fib_1.5_Low_2_High_2': df.loc[0, 'Fib_1.5_Low_2_High_2'],
+        'Fib_1.618_Low_2_High_2': df.loc[0, 'Fib_1.618_Low_2_High_2'],
+        'Fib_0.382_Current_High_Current_Low': df.loc[0, 'Fib_0.382_Current_High_Current_Low'],
+        'Fib_0.5_Current_High_Current_Low': df.loc[0, 'Fib_0.5_Current_High_Current_Low'],
+        'Fib_0.618_Current_High_Current_Low': df.loc[0, 'Fib_0.618_Current_High_Current_Low'],
+        'Fib_0.786_Current_High_Current_Low': df.loc[0, 'Fib_0.786_Current_High_Current_Low'],
+        'Fib_1.5_Current_High_Current_Low': df.loc[0, 'Fib_1.5_Current_High_Current_Low'],
+        'Fib_1.618_Current_High_Current_Low': df.loc[0, 'Fib_1.618_Current_High_Current_Low'],
+        'Fib_0.382_Current_Low_Current_High': df.loc[0, 'Fib_0.382_Current_Low_Current_High'],
+        'Fib_0.5_Current_Low_Current_High': df.loc[0, 'Fib_0.5_Current_Low_Current_High'],
+        'Fib_0.618_Current_Low_Current_High': df.loc[0, 'Fib_0.618_Current_Low_Current_High'],
+        'Fib_0.786_Current_Low_Current_High': df.loc[0, 'Fib_0.786_Current_Low_Current_High'],
+        'Fib_1.5_Current_Low_Current_High': df.loc[0, 'Fib_1.5_Current_Low_Current_High'],
+        'Fib_1.618_Current_Low_Current_High': df.loc[0, 'Fib_1.618_Current_Low_Current_High'],
+        'Diff_open_day_open': open_val - day_open,
+        'Diff_open_Current_High': open_val - current_high,
+        'Diff_open_Current_Low': open_val - current_low,
+        'Diff_open_High_1': open_val - high_1,
+        'Diff_open_Low_1': open_val - low_1,
+        'Diff_open_Volume_1': open_val - volume_1,
+        'Diff_open_High_2': open_val - high_2,
+        'Diff_open_Low_2': open_val - low_2,
+        'Diff_open_Volume_2': open_val - volume_2,
+        'Diff_open_Diff_Current_High_High_1': open_val - (current_high - high_1),
+        'Diff_open_Diff_Current_High_High_2': open_val - (current_high - high_2),
+        'Diff_open_Diff_Current_Low_Low_1': open_val - (current_low - low_1),
+        'Diff_open_Diff_Current_Low_Low_2': open_val - (current_low - low_2),
+        'Diff_open_Diff_High_1_High_2': open_val - (high_1 - high_2),
+        'Diff_open_Diff_Low_1_Low_2': open_val - (low_1 - low_2),
+        'Volume_Difference': volume_1 - volume_2,
+        'Volume_Percentage_Change': ((volume_1 - volume_2) / volume_2) * 100,
+        'Volume_Ratio': volume_1 / volume_2,
+        'Volume_Sum': volume_1 + volume_2,
+        'High_Low_Difference': current_high - current_low,
+        'VWAP': recent_data['VWAP'].iloc[-1],
+        '3D_Volume_MA': recent_data['3D_Volume_MA'].iloc[-1],
+        '5D_Volume_MA': recent_data['5D_Volume_MA'].iloc[-1],
+        '7D_Volume_MA': recent_data['7D_Volume_MA'].iloc[-1],
+        '1D_Volume_MA': recent_data['1D_Volume_MA'].iloc[-1],
+        '2D_Volume_MA': recent_data['2D_Volume_MA'].iloc[-1]
     }
-
-    # Adding calculated differences and Fibonacci levels in the correct order
-    features_in_order = [
-        'Diff_Current_High_High_1', 'Diff_Current_High_High_2', 'Diff_Current_Low_Low_1',
-        'Diff_Current_Low_Low_2', 'Diff_High_1_High_2', 'Diff_Low_1_Low_2'
-    ]
-
-    for high, low in [('High_1', 'Low_1'), ('High_1', 'Low_2'), ('High_2', 'Low_1'), ('High_2', 'Low_2'),
-                      ('Low_1', 'High_1'), ('Low_1', 'High_2'), ('Low_2', 'High_1'), ('Low_2', 'High_2'),
-                      ('Current_High', 'Current_Low'), ('Current_Low', 'Current_High')]:
-        for ratio in fib_ratios:
-            features_in_order.append(f'Fib_{ratio}_{high}_{low}')
-
-    for col1, col2 in column_pairs:
-        features_in_order.append(f'Diff_{col1}_{col2}')
-
-    # Additional features based on 'open' and 'day_open'
-    additional_features_ordered = [
-        'Diff_open_day_open', 'Diff_open_Current_High', 'Diff_open_Current_Low', 'Diff_open_High_1',
-        'Diff_open_Low_1', 'Diff_open_Volume_1', 'Diff_open_High_2', 'Diff_open_Low_2', 'Diff_open_Volume_2',
-        'Diff_open_Diff_Current_High_High_1', 'Diff_open_Diff_Current_High_High_2',
-        'Diff_open_Diff_Current_Low_Low_1', 'Diff_open_Diff_Current_Low_Low_2',
-        'Diff_open_Diff_High_1_High_2', 'Diff_open_Diff_Low_1_Low_2',
-        'Volume_Difference', 'Volume_Percentage_Change', 'Volume_Ratio', 'Volume_Sum',
-        'High_Low_Difference', 'VWAP', '3D_Volume_MA', '5D_Volume_MA', '7D_Volume_MA', '1D_Volume_MA',
-        '2D_Volume_MA'
-    ]
-
-    # Combining all features
-    all_features = list(data.keys()) + features_in_order + additional_features_ordered
-
-    # Update the 'data' dictionary with all features
-    for feature in all_features:
-        if feature not in data:
-            data[feature] = df[feature].iloc[0] if feature in df.columns else 0
 
     # Convert data to DataFrame for prediction
     data_df = pd.DataFrame([data])
@@ -173,9 +298,6 @@ else:
     # Display the aggregated row
     st.subheader("Aggregated Data for Model Prediction")
     st.dataframe(data_df)
-
-    # Show the number of features
-    st.write(f"Total number of features: {len(data_df.columns)}")
 
     # Load the model
     model = load_model()

@@ -176,14 +176,14 @@ else:
         return row['close']  # If Volume_1 is not zero or NaN, this will return the close price as VWAP
     
     # Assuming `close` is available in `clean_nifty_5min`
-    clean_nifty_5min['VWAP'] = clean_nifty_5min.apply(calculate_vwap, axis=1)
+    recent_data['VWAP'] = recent_data.apply(calculate_vwap, axis=1)
 
     # Calculate moving averages with windows adjusted to trading days
-    clean_nifty_5min['1D_Volume_MA'] = clean_nifty_5min['Volume_1'].rolling(window=75, min_periods=1).mean().fillna(0)
-    clean_nifty_5min['2D_Volume_MA'] = clean_nifty_5min['Volume_1'].rolling(window=150, min_periods=1).mean().fillna(0)
-    clean_nifty_5min['3D_Volume_MA'] = clean_nifty_5min['Volume_1'].rolling(window=225, min_periods=1).mean().fillna(0)
-    clean_nifty_5min['5D_Volume_MA'] = clean_nifty_5min['Volume_1'].rolling(window=375, min_periods=1).mean().fillna(0)
-    clean_nifty_5min['7D_Volume_MA'] = clean_nifty_5min['Volume_1'].rolling(window=525, min_periods=1).mean().fillna(0)
+    recent_data['1D_Volume_MA'] = recent_data['Volume_1'].rolling(window=1, min_periods=1).mean().fillna(0)
+    recent_data['2D_Volume_MA'] = recent_data['Volume_1'].rolling(window=2, min_periods=1).mean().fillna(0)
+    recent_data['3D_Volume_MA'] = recent_data['Volume_1'].rolling(window=3, min_periods=1).mean().fillna(0)
+    recent_data['5D_Volume_MA'] = recent_data['Volume_1'].rolling(window=5, min_periods=1).mean().fillna(0)
+    recent_data['7D_Volume_MA'] = recent_data['Volume_1'].rolling(window=7, min_periods=1).mean().fillna(0)
     
     # Create a single row DataFrame for model prediction
     data = {

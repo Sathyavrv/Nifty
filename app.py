@@ -174,6 +174,9 @@ else:
     st.subheader("Aggregated Data for Model Prediction")
     st.dataframe(data_df)
 
+    # Show the number of features
+    st.write(f"Total number of features: {len(data_df.columns)}")
+
     # Load the model
     model = load_model()
 

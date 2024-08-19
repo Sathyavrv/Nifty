@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import yfinance as yf
@@ -6,9 +5,6 @@ from pandas_datareader import data as pdr
 from datetime import datetime
 import joblib
 import lightgbm
-
-# Override yfinance with pandas_datareader
-#yf.pdr_override()
 
 # Function to get the latest two working days from Yahoo Finance
 def get_recent_data(ticker, selected_date):
@@ -47,7 +43,7 @@ def load_model():
     return joblib.load("lgb_model_aug18.pkl")
 
 def calculate_fibonacci_levels(df):
-    fib_ratios = [0.382, 0.5, 0.618,0.786, 1.5, 1.618]
+    fib_ratios = [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]
     high_low_combinations = [
         ('High_1', 'Low_1'), ('High_1', 'Low_2'), ('High_2', 'Low_1'), ('High_2', 'Low_2'),
         ('Low_1', 'High_1'), ('Low_1', 'High_2'), ('Low_2', 'High_1'), ('Low_2', 'High_2'),
@@ -172,14 +168,12 @@ else:
     # Replace the last value in the recent_data Volume column with the manual input
     recent_data['Volume'].iloc[-1] = volume_1
 
-
-        # Calculate VWAP
+    # Calculate VWAP
     def calculate_vwap(row):
         if row['Volume'] == 0 or pd.isna(row['Volume']):
             return 0  # or you could return np.nan or any other value that suits your needs
         return row['Close']  # If Volume_1 is not zero or NaN, this will return the close price as VWAP
     
-    # Assuming `close` is available in `clean_nifty_5min`
     recent_data['VWAP'] = recent_data.apply(calculate_vwap, axis=1)
 
     # Calculate moving averages with windows adjusted to trading days
@@ -295,9 +289,8 @@ else:
         '5D_Volume_MA': recent_data['5D_Volume_MA'].iloc[-1],
         '7D_Volume_MA': recent_data['7D_Volume_MA'].iloc[-1],
         '1D_Volume_MA': recent_data['1D_Volume_MA'].iloc[-1],
-        '2D_Volume_MA': recent_data['2D_Volume_MA'].iloc[-1],  
+        '2D_Volume_MA': recent_data['2D_Volume_MA'].iloc[-1]
     }
-
 
     # Convert data to DataFrame for prediction
     data_df = pd.DataFrame([data])

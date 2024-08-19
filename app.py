@@ -169,9 +169,13 @@ else:
     df = calculate_fibonacci_levels(df)
     df = calculate_column_differences(df)
 
+    # Replace the last value in the recent_data Volume column with the manual input
+    recent_data['Volume'].iloc[-1] = volume_1
+
+
         # Calculate VWAP
     def calculate_vwap(row):
-        if row['Volume_1'] == 0 or pd.isna(row['Volume']):
+        if row['Volume'] == 0 or pd.isna(row['Volume']):
             return 0  # or you could return np.nan or any other value that suits your needs
         return row['close']  # If Volume_1 is not zero or NaN, this will return the close price as VWAP
     

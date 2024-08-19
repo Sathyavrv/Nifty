@@ -290,12 +290,12 @@ else:
         'Volume_Ratio': volume_1 / volume_2,
         'Volume_Sum': volume_1 + volume_2,
         'High_Low_Difference': current_high - current_low,
-        'VWAP': clean_nifty_5min['VWAP'].iloc[-1],
-        '3D_Volume_MA': clean_nifty_5min['3D_Volume_MA'].iloc[-1],
-        '5D_Volume_MA': clean_nifty_5min['5D_Volume_MA'].iloc[-1],
-        '7D_Volume_MA': clean_nifty_5min['7D_Volume_MA'].iloc[-1],
-        '1D_Volume_MA': clean_nifty_5min['1D_Volume_MA'].iloc[-1],
-        '2D_Volume_MA': clean_nifty_5min['2D_Volume_MA'].iloc[-1],  
+        'VWAP': recent_data['VWAP'].iloc[-1],
+        '3D_Volume_MA': recent_data['3D_Volume_MA'].iloc[-1],
+        '5D_Volume_MA': recent_data['5D_Volume_MA'].iloc[-1],
+        '7D_Volume_MA': recent_data['7D_Volume_MA'].iloc[-1],
+        '1D_Volume_MA': recent_data['1D_Volume_MA'].iloc[-1],
+        '2D_Volume_MA': recent_data['2D_Volume_MA'].iloc[-1],  
     }
 
 

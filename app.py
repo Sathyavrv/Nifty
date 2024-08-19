@@ -171,7 +171,7 @@ else:
 
         # Calculate VWAP
     def calculate_vwap(row):
-        if row['Volume_1'] == 0 or pd.isna(row['Volume_1']):
+        if row['Volume_1'] == 0 or pd.isna(row['Volume']):
             return 0  # or you could return np.nan or any other value that suits your needs
         return row['close']  # If Volume_1 is not zero or NaN, this will return the close price as VWAP
     
@@ -179,11 +179,11 @@ else:
     recent_data['VWAP'] = recent_data.apply(calculate_vwap, axis=1)
 
     # Calculate moving averages with windows adjusted to trading days
-    recent_data['1D_Volume_MA'] = recent_data['Volume_1'].rolling(window=1, min_periods=1).mean().fillna(0)
-    recent_data['2D_Volume_MA'] = recent_data['Volume_1'].rolling(window=2, min_periods=1).mean().fillna(0)
-    recent_data['3D_Volume_MA'] = recent_data['Volume_1'].rolling(window=3, min_periods=1).mean().fillna(0)
-    recent_data['5D_Volume_MA'] = recent_data['Volume_1'].rolling(window=5, min_periods=1).mean().fillna(0)
-    recent_data['7D_Volume_MA'] = recent_data['Volume_1'].rolling(window=7, min_periods=1).mean().fillna(0)
+    recent_data['1D_Volume_MA'] = recent_data['Volume'].rolling(window=1, min_periods=1).mean().fillna(0)
+    recent_data['2D_Volume_MA'] = recent_data['Volume'].rolling(window=2, min_periods=1).mean().fillna(0)
+    recent_data['3D_Volume_MA'] = recent_data['Volume'].rolling(window=3, min_periods=1).mean().fillna(0)
+    recent_data['5D_Volume_MA'] = recent_data['Volume'].rolling(window=5, min_periods=1).mean().fillna(0)
+    recent_data['7D_Volume_MA'] = recent_data['Volume'].rolling(window=7, min_periods=1).mean().fillna(0)
     
     # Create a single row DataFrame for model prediction
     data = {

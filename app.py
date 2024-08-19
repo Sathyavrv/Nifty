@@ -115,7 +115,7 @@ else:
     for col1, col2 in column_pairs:
         df[f'Diff_{col1}_{col2}'] = df[col1] - df[col2]
 
-    # Calculate all features
+    # Ensure all features are included in the correct order
     data = {
         'open': open_val,
         'Month': month,
@@ -130,51 +130,42 @@ else:
         'High_2': high_2,
         'Low_2': low_2,
         'Volume_2': volume_2,
-        'Diff_Current_High_High_1': current_high - high_1,
-        'Diff_Current_High_High_2': current_high - high_2,
-        'Diff_Current_Low_Low_1': current_low - low_1,
-        'Diff_Current_Low_Low_2': current_low - low_2,
-        'Diff_High_1_High_2': high_1 - high_2,
-        'Diff_Low_1_Low_2': low_1 - low_2,
     }
+
+    # Adding calculated differences and Fibonacci levels in the correct order
+    features_in_order = [
+        'Diff_Current_High_High_1', 'Diff_Current_High_High_2', 'Diff_Current_Low_Low_1',
+        'Diff_Current_Low_Low_2', 'Diff_High_1_High_2', 'Diff_Low_1_Low_2'
+    ]
+
     for high, low in [('High_1', 'Low_1'), ('High_1', 'Low_2'), ('High_2', 'Low_1'), ('High_2', 'Low_2'),
                       ('Low_1', 'High_1'), ('Low_1', 'High_2'), ('Low_2', 'High_1'), ('Low_2', 'High_2'),
                       ('Current_High', 'Current_Low'), ('Current_Low', 'Current_High')]:
         for ratio in fib_ratios:
-            data[f'Fib_{ratio}_{high}_{low}'] = df[f'Fib_{ratio}_{high}_{low}'].iloc[0]
-    for col1, col2 in column_pairs:
-        data[f'Diff_{col1}_{col2}'] = df[f'Diff_{col1}_{col2}'].iloc[0]
+            features_in_order.append(f'Fib_{ratio}_{high}_{low}')
 
-    # Add more features
-    additional_features = {
-        'Diff_open_day_open': open_val - day_open,
-        'Diff_open_Current_High': open_val - current_high,
-        'Diff_open_Current_Low': open_val - current_low,
-        'Diff_open_High_1': open_val - high_1,
-        'Diff_open_Low_1': open_val - low_1,
-        'Diff_open_Volume_1': open_val - volume_1,
-        'Diff_open_High_2': open_val - high_2,
-        'Diff_open_Low_2': open_val - low_2,
-        'Diff_open_Volume_2': open_val - volume_2,
-        'Diff_open_Diff_Current_High_High_1': open_val - (current_high - high_1),
-        'Diff_open_Diff_Current_High_High_2': open_val - (current_high - high_2),
-        'Diff_open_Diff_Current_Low_Low_1': open_val - (current_low - low_1),
-        'Diff_open_Diff_Current_Low_Low_2': open_val - (current_low - low_2),
-        'Diff_open_Diff_High_1_High_2': open_val - (high_1 - high_2),
-        'Diff_open_Diff_Low_1_Low_2': open_val - (low_1 - low_2),
-        'Volume_Difference': volume_1 - volume_2,
-        'Volume_Percentage_Change': ((volume_1 - volume_2) / volume_2) * 100 if volume_2 != 0 else 0,
-        'Volume_Ratio': volume_1 / volume_2 if volume_2 != 0 else 0,
-        'Volume_Sum': volume_1 + volume_2,
-        'High_Low_Difference': current_high - current_low,
-        'VWAP': recent_data['VWAP'].iloc[-1],
-        '3D_Volume_MA': recent_data['3D_Volume_MA'].iloc[-1],
-        '5D_Volume_MA': recent_data['5D_Volume_MA'].iloc[-1],
-        '7D_Volume_MA': recent_data['7D_Volume_MA'].iloc[-1],
-        '1D_Volume_MA': recent_data['1D_Volume_MA'].iloc[-1],
-        '2D_Volume_MA': recent_data['2D_Volume_MA'].iloc[-1],
-    }
-    data.update(additional_features)
+    for col1, col2 in column_pairs:
+        features_in_order.append(f'Diff_{col1}_{col2}')
+
+    # Additional features based on 'open' and 'day_open'
+    additional_features_ordered = [
+        'Diff_open_day_open', 'Diff_open_Current_High', 'Diff_open_Current_Low', 'Diff_open_High_1',
+        'Diff_open_Low_1', 'Diff_open_Volume_1', 'Diff_open_High_2', 'Diff_open_Low_2', 'Diff_open_Volume_2',
+        'Diff_open_Diff_Current_High_High_1', 'Diff_open_Diff_Current_High_High_2',
+        'Diff_open_Diff_Current_Low_Low_1', 'Diff_open_Diff_Current_Low_Low_2',
+        'Diff_open_Diff_High_1_High_2', 'Diff_open_Diff_Low_1_Low_2',
+        'Volume_Difference', 'Volume_Percentage_Change', 'Volume_Ratio', 'Volume_Sum',
+        'High_Low_Difference', 'VWAP', '3D_Volume_MA', '5D_Volume_MA', '7D_Volume_MA', '1D_Volume_MA',
+        '2D_Volume_MA'
+    ]
+
+    # Combining all features
+    all_features = list(data.keys()) + features_in_order + additional_features_ordered
+
+    # Update the 'data' dictionary with all features
+    for feature in all_features:
+        if feature not in data:
+            data[feature] = df[feature].iloc[0] if feature in df.columns else 0
 
     # Convert data to DataFrame for prediction
     data_df = pd.DataFrame([data])

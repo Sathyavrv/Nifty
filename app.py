@@ -44,7 +44,7 @@ def calculate_kpis(df):
 
 # Load your pre-trained model
 def load_model():
-    return joblib.load("lgb_model_june11.pkl")
+    return joblib.load("lgb_model_aug18.pkl")
 
 def calculate_fibonacci_levels(df):
     fib_ratios = [0.382, 0.5, 0.618,0.786, 1.5, 1.618]
@@ -177,7 +177,7 @@ else:
     def calculate_vwap(row):
         if row['Volume'] == 0 or pd.isna(row['Volume']):
             return 0  # or you could return np.nan or any other value that suits your needs
-        return row['close']  # If Volume_1 is not zero or NaN, this will return the close price as VWAP
+        return row['Close']  # If Volume_1 is not zero or NaN, this will return the close price as VWAP
     
     # Assuming `close` is available in `clean_nifty_5min`
     recent_data['VWAP'] = recent_data.apply(calculate_vwap, axis=1)

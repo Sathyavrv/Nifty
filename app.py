@@ -41,7 +41,7 @@ def calculate_kpis(df):
 
 # Load your pre-trained model
 def load_model():
-    return joblib.load("lgb_model_aug20.pkl")
+    return joblib.load("lgb_model_fit_aug21.pkl")
 
 def calculate_fibonacci_levels(df):
     fib_ratios = [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]
@@ -185,7 +185,7 @@ else:
         'open': open_val,
         'Month': month,
         'Hour': hour,
-        #'Minute': minute,
+        'Minute': minute,
         'day_open': day_open,
         'Current_High': current_high,
         'Current_Low': current_low,
@@ -418,9 +418,9 @@ else:
         'Volume_Sum': volume_1 + volume_2,
         'High_Low_Difference': current_high - current_low,
         'VWAP': recent_data['VWAP'].iloc[-1],
-        #'3D_Volume_MA': recent_data['3D_Volume_MA'].iloc[-1],
-        #'5D_Volume_MA': recent_data['5D_Volume_MA'].iloc[-1],
-        #'7D_Volume_MA': recent_data['7D_Volume_MA'].iloc[-1],
+        '3D_Volume_MA': recent_data['3D_Volume_MA'].iloc[-1],
+        '5D_Volume_MA': recent_data['5D_Volume_MA'].iloc[-1],
+        '7D_Volume_MA': recent_data['7D_Volume_MA'].iloc[-1],
         '1D_Volume_MA': recent_data['1D_Volume_MA'].iloc[-1],
         '2D_Volume_MA': recent_data['2D_Volume_MA'].iloc[-1],
         '3D_Volume_MA': recent_data['3D_Volume_MA'].iloc[-1],
@@ -437,11 +437,11 @@ else:
     model = load_model()
 
     prediction = model.predict(data_df)
-    prediction_proba = model.predict_proba(data_df)
+    #prediction_proba = model.predict_proba(data_df)
 
     st.subheader("Model Prediction")
     st.write("Prediction:", prediction)
-    st.write("Prediction Probability:", prediction_proba)
+    #st.write("Prediction Probability:", prediction_proba)
 
     st.markdown("---")
     st.write("**Note:** Ensure that the retrieved data is correct and there are no missing values before proceeding with model prediction.")

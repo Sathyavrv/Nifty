@@ -436,11 +436,11 @@ else:
     # Load the model
     model = load_model()
 
-    prediction = model.predict(data_df)
+    #prediction = model.predict(data_df)
     prediction_proba = model.predict_proba(data_df)
 
     st.subheader("Model Prediction")
-    st.write("Prediction:", prediction)
+    #st.write("Prediction:", prediction)
     st.write("Prediction Probability:", prediction_proba)
 
     st.markdown("---")

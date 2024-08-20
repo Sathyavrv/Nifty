@@ -102,11 +102,12 @@ st.set_page_config(page_title="Stock Prediction", page_icon="📈", layout="cent
 st.title("Stock Prediction Model")
 
 st.sidebar.header("Input Parameters")
-day_open = st.sidebar.number_input('day_open', value=24)
-open_val = st.sidebar.number_input('Open', value=24)
-current_high = st.sidebar.number_input('Current_High', value=24)
-current_low = st.sidebar.number_input('Current_Low', value=24)
+day_open = st.sidebar.number_input('day_open', value=24.00, format="%.2f")
+open_val = st.sidebar.number_input('Open', value=24.00, format="%.2f")
+current_high = st.sidebar.number_input('Current_High', value=24.00, format="%.2f")
+current_low = st.sidebar.number_input('Current_Low', value=24.00, format="%.2f")
 volume_1 = st.sidebar.number_input('Volume_1', value=200000)
+
 
 # Selectors for date and time
 st.sidebar.header("Select Date and Time")

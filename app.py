@@ -41,7 +41,7 @@ def calculate_kpis(df):
 
 # Load your pre-trained model
 def load_model():
-    return joblib.load("lgb_model_fit_aug20.pkl")
+    return joblib.load("model_fold_1.pkl")
 
 def calculate_fibonacci_levels(df):
     fib_ratios = [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]
@@ -418,9 +418,9 @@ else:
         'Volume_Sum': volume_1 + volume_2,
         'High_Low_Difference': current_high - current_low,
         'VWAP': recent_data['VWAP'].iloc[-1],
-        '3D_Volume_MA': recent_data['3D_Volume_MA'].iloc[-1],
-        '5D_Volume_MA': recent_data['5D_Volume_MA'].iloc[-1],
-        '7D_Volume_MA': recent_data['7D_Volume_MA'].iloc[-1],
+        #'3D_Volume_MA': recent_data['3D_Volume_MA'].iloc[-1],
+        #'5D_Volume_MA': recent_data['5D_Volume_MA'].iloc[-1],
+        #'7D_Volume_MA': recent_data['7D_Volume_MA'].iloc[-1],
         '1D_Volume_MA': recent_data['1D_Volume_MA'].iloc[-1],
         '2D_Volume_MA': recent_data['2D_Volume_MA'].iloc[-1],
         '3D_Volume_MA': recent_data['3D_Volume_MA'].iloc[-1],

@@ -434,7 +434,7 @@ else:
     # Load the model
     model = load_model()
 
-    prediction = model.predict(data_df)
+    prediction = model.predict(data_df) / 5
     #prediction_proba = model.predict_proba(data_df)
 
     st.subheader("Model Prediction")

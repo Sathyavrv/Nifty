@@ -41,7 +41,7 @@ def calculate_kpis(df):
 
 # Load your pre-trained model
 def load_model():
-    return joblib.load("model_fold_1.pkl")
+    return joblib.load("lgb_model_aug20.pkl")
 
 def calculate_fibonacci_levels(df):
     fib_ratios = [0.382, 0.5, 0.618, 0.786, 1.5, 1.618]
@@ -185,7 +185,7 @@ else:
         'open': open_val,
         'Month': month,
         'Hour': hour,
-        'Minute': minute,
+        #'Minute': minute,
         'day_open': day_open,
         'Current_High': current_high,
         'Current_Low': current_low,

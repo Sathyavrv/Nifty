@@ -183,9 +183,9 @@ else:
     # Create a single row DataFrame for model prediction
     data = {
         'open': open_val,
-        #'Month': month,
-        #'Hour': hour,
-        #'Minute': minute,
+        'Month': month,
+        'Hour': hour,
+        'Minute': minute,
         'day_open': day_open,
         'Current_High': current_high,
         'Current_Low': current_low,
